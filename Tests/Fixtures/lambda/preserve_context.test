@@ -1,0 +1,11 @@
+--TEST--
+lambda doesn't override _ and __ variables from outside
+--TEMPLATE--
+{% do call(=> _, ['FAIL']) -%}
+{{ _ }}
+{{ __ }}
+--DATA--
+return [ '_' => 'WORKS', '__' => 'WORKS' ];
+--EXPECT--
+WORKS
+WORKS

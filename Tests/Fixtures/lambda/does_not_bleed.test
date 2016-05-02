@@ -1,0 +1,11 @@
+--TEST--
+lambda call does not leave "_" and "__" variables set after call
+--TEMPLATE--
+{% do call( => _ , ['FOO'] ) -%}
+{{ _ is not defined ? 'WORKS' : 'FAILS' }}
+{{ __ is not defined ? 'WORKS' : 'FAILS' }}
+--DATA--
+return [];
+--EXPECT--
+WORKS
+WORKS

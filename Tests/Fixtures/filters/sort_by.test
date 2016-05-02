@@ -1,0 +1,35 @@
+--TEST--
+"sortBy" filter
+--TEMPLATE--
+--TEMPLATE--
+{% for i in data|sortBy(=> _.bar ) %}
+ * {{ i.foo }}
+{% endfor %}
+--DATA--
+return [ 'data' => [
+    [ 'foo' => 'a', 'bar' => 4 ],
+    [ 'foo' => 'b', 'bar' => 2 ],
+    [ 'foo' => 'c', 'bar' => 5 ],
+    [ 'foo' => 'd', 'bar' => 1 ],
+    [ 'foo' => 'e', 'bar' => 3 ],
+] ];
+--EXPECT--
+ * d
+ * b
+ * e
+ * a
+ * c
+--DATA--
+return [ 'data' => [
+    [ 'foo' => 'a', 'bar' => 20 ],
+    [ 'foo' => 'b', 'bar' => -1 ],
+    [ 'foo' => 'c', 'bar' => 20 ],
+    [ 'foo' => 'd', 'bar' => -1 ],
+    [ 'foo' => 'e', 'bar' => 20 ],
+] ];
+--EXPECT--
+ * b
+ * d
+ * a
+ * c
+ * e

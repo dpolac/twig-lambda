@@ -1,0 +1,26 @@
+--TEST--
+lambda operator have lowest priority
+--TEMPLATE--
+{{ call(=> _ + 1, [2]) }}
+{{ call(=> _ - 1, [2]) }}
+{{ call(=> _ * 2, [4]) }}
+{{ call(=> _ / 5, [10]) }}
+{{ call(=> _ % 2, [9]) }}
+{{ call(=> _ ~ 1, [1]) }}
+{{ call(=> _ b-or 5, [3]) }}
+{{ call(=> _[0], [[1]]) }}
+{{ call(=> _.foo, [{foo:'bar'}]) }}
+{{ call(=> _|first, ['foobar']) }}
+--DATA--
+return [];
+--EXPECT--
+3
+1
+8
+2
+1
+11
+7
+1
+bar
+f

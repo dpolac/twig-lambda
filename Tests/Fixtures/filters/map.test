@@ -1,0 +1,30 @@
+--TEST--
+"map" filter
+--TEMPLATE--
+{% for i in data|map(=> _.FOO + 1 ) %}
+ * {{ i }}
+{% endfor %}
+====
+{% for i in data|select(=> _['BAR'] ) %}
+ * {{ i }}
+{% endfor %}
+--DATA--
+return [ 'data' => [
+    [ 'FOO' => 1, 'BAR' => 'a' ],
+    [ 'FOO' => 2, 'BAR' => 'b' ],
+    [ 'FOO' => 3, 'BAR' => 'c' ],
+    [ 'FOO' => 4, 'BAR' => 'd' ],
+    [ 'FOO' => 5, 'BAR' => 'e' ],
+] ];
+--EXPECT--
+ * 2
+ * 3
+ * 4
+ * 5
+ * 6
+====
+ * a
+ * b
+ * c
+ * d
+ * e

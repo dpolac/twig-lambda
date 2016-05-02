@@ -1,0 +1,30 @@
+--TEST--
+"any" test
+--TEMPLATE--
+{{ data is any(=> _ > 6) ? 'YES':'NO' }}
+{{ data is any(=> _ is even) ? 'YES':'NO' }}
+{{ data is some(=> _ < 0) ? 'YES':'NO' }}
+--DATA--
+return [ 'data' => [1, 2, 3, 4, 5] ];
+--EXPECT--
+NO
+YES
+NO
+--DATA--
+return [ 'data' => [] ];
+--EXPECT--
+NO
+NO
+NO
+--DATA--
+return [ 'data' => [-1, -7, 13, 1, 5] ];
+--EXPECT--
+YES
+NO
+YES
+--DATA--
+return [ 'data' => [0, 0, 1, 3] ];
+--EXPECT--
+NO
+YES
+NO

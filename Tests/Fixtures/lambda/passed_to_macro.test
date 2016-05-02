@@ -1,0 +1,19 @@
+--TEST--
+lambda can be passed to macro
+--TEMPLATE--
+{% import "macro.twig" as macro %}
+{% set prefix = ' * ' %}
+{{ macro.print(data, => prefix ~ _ ~ suffix) }}
+--TEMPLATE(macro.twig)--
+{% macro print(list, callback) %}
+{% set prefix = 'WRONG! ' %}
+{% for i in list %}
+{{ call(callback, [i]) }}
+{% endfor %}
+{% endmacro %}
+--DATA--
+return [ 'suffix' => '.', 'data' => [ 'foo', 'bar', 'tet' ] ];
+--EXPECT--
+ * foo.
+ * bar.
+ * tet.

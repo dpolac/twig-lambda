@@ -1,0 +1,30 @@
+--TEST--
+"all" test
+--TEMPLATE--
+{{ data is all(=> _ > 6) ? 'YES':'NO' }}
+{{ data is all(=> _ is even) ? 'YES':'NO' }}
+{{ data is every(=> _ < 12) ? 'YES':'NO' }}
+--DATA--
+return [ 'data' => [] ];
+--EXPECT--
+YES
+YES
+YES
+--DATA--
+return [ 'data' => [7, 8, 10] ];
+--EXPECT--
+YES
+NO
+YES
+--DATA--
+return [ 'data' => [-2, -8, 14, 2, 6] ];
+--EXPECT--
+NO
+YES
+NO
+--DATA--
+return [ 'data' => [20] ];
+--EXPECT--
+YES
+YES
+NO

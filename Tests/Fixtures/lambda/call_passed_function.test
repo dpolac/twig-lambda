@@ -1,0 +1,15 @@
+--TEST--
+"call" works with callable passed from PHP
+--TEMPLATE--
+{{ call(write, ['FOO']) }}
+--DATA--
+function write($text) {
+    return $text . 'BAR';
+}
+return [ 'write' => 'write' ];
+--EXPECT--
+FOOBAR
+--DATA--
+return [ 'write' => function($text) { return $text.'FOO'; } ];
+--EXPECT--
+FOOFOO

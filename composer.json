@@ -1,0 +1,39 @@
+{
+    "name": "dpolac/twig-lambda",
+    "type": "library",
+    "description": "Lambda expressions for Twig and filters that make use of them",
+    "keywords": [
+        "lambda",
+        "function",
+        "unique",
+        "functional",
+        "filter",
+        "map",
+        "group",
+        "sort"
+    ],
+    "minimum-stability": "dev",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Damian Polac",
+            "email": "damian.polac.111@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^5.4 || ^7.0",
+        "twig/twig": "^1.0",
+        "anahkiasen/underscore-php": "^2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "DPolac\\TwigLambda\\": ""
+        },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    }
+}

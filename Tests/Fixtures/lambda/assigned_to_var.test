@@ -1,0 +1,9 @@
+--TEST--
+lambda can be assigned to variable
+--TEMPLATE--
+{% set fn = => 'FOO' -%}
+{{ call(fn) }}
+--DATA--
+return [];
+--EXPECT--
+FOO

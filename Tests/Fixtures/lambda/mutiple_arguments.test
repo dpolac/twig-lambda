@@ -1,0 +1,10 @@
+--TEST--
+lambda can have multiple arguments
+--TEMPLATE--
+{{ call(=> __[0] ~ __[1] ~ __[2], [ 3, 4, 5 ]) }}
+{{ call(=> __|join(','), [6, 'FOO', 'BAR']) }}
+--DATA--
+return [];
+--EXPECT--
+345
+6,FOO,BAR

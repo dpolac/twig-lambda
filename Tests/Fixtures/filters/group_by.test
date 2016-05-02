@@ -1,0 +1,29 @@
+--TEST--
+"groupBy" filter
+--TEMPLATE--
+{% for key,items in data|groupBy(=> _|first ) %}
+ = {{ key }}
+{% for i in items %}
+   * {{ i }}
+{% endfor %}
+{% endfor %}
+--DATA--
+return [ 'data' => [ 'foo', 'bar', 'tet' ] ];
+--EXPECT--
+ = f
+   * foo
+ = b
+   * bar
+ = t
+   * tet
+--DATA--
+return [ 'data' => [ 'foo', 'foobar', 'tet', 'bar', 'tetfoo' ] ];
+--EXPECT--
+ = f
+   * foo
+   * foobar
+ = t
+   * tet
+   * tetfoo
+ = b
+   * bar
