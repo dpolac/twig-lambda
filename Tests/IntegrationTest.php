@@ -2,7 +2,7 @@
 
 namespace DPolac\TwigLambda\Tests;
 
-use DPolac\TwigLambda\Extension\LambdaExtension;
+use DPolac\TwigLambda\LambdaExtension;
 
 class IntegrationTest extends \Twig_Test_IntegrationTestCase
 {

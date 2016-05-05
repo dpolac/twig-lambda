@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace DPolac\TwigLambda\Extension;
+namespace DPolac\TwigLambda;
 
 use Underscore\Types\Arrays;
 

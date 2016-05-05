@@ -32,7 +32,7 @@ composer require dpolac/twig-lambda
 
 ### Add the extension to Twig:
 ```php
-$twig->addExtension(new \DPolac\TwigLambda\Extension\LambdaExtension());
+$twig->addExtension(new \DPolac\TwigLambda\LambdaExtension());
 ```
 
 ----------------------------------------------------------------
