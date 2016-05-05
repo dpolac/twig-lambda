@@ -8,7 +8,7 @@
 
 Listing names of all authors ordered by age:
 ```twig
-{% for author in articles|map(=> _.author)|unique|sortBy(=> _.age) %}
+{% for author in articles|map(=> _.author)|unique|sort_by(=> _.age) %}
     * {{ author.name }}, {{ author.age }}
 {% endfor %}
 ```
@@ -43,10 +43,9 @@ $twig->addExtension(new \DPolac\TwigLambda\Extension\LambdaExtension());
     [map](#map)
     [filter](#filter)
     [unique](#unique)
-    [uniqueBy](#uniqueby)
-    [groupBy](#groupby)
-    [sortBy](#sortby)
-    [countBy](#countby)
+    [group_by](#group_by)
+    [sort_by](#sort_by)
+    [count_by](#count_by)
     <br>
 **Tests:**
     [any](#any)
@@ -78,7 +77,7 @@ variables available:
 
 <a name="map"></a>
 ### |map
-**Aliases:** `|select`, `|each`<br>
+**Alias:** `|select`<br>
 **Signature:** `array|map(lambda)`
 
 Applies a given function to each element and returns
@@ -94,7 +93,7 @@ array of results in the same order.
 
 <a name="filter"></a>
 ### |filter
-**Aliases:** `|where`<br>
+**Alias:** `|where`<br>
 **Signature:** `array|filter(lambda)`
 
 Returns array of elements that passes a test specified by lambda.
@@ -115,14 +114,14 @@ Returns array with every element occurring only once.
 
 ----------------------------------------------------------------
 
-<a name="groupby"></a>
-### |groupBy
-**Signature:** `array|groupBy(lambda)`
+<a name="group_by"></a>
+### |group_by
+**Signature:** `array|group_by(lambda)`
 
 Sorts an array into groups by the result of lambda.
 
 ```twig
-{% for key, group in ['foo', 'bar', 'foobar', 'barbar']|groupBy(=> _|first|capitalize) %}
+{% for key, group in ['foo', 'bar', 'foobar', 'barbar']|group_by(=> _|first|capitalize) %}
     = {{ key }}
     {% for i in group %}
         * {{ i }}
@@ -141,24 +140,24 @@ will produce
 
 ----------------------------------------------------------------
 
-<a name="sortby"></a>
-### |sortBy
-**Signature:** `array|sortBy(lambda[, direction = 'ASC'])`
+<a name="sort_by"></a>
+### |sort_by
+**Signature:** `array|sort_by(lambda[, direction = 'ASC'])`
 
 Sorts array by values returned by lambda.
 Direction can be 'ASC' or 'DESC'.
 
 ```twig
-{% for i in ['bar', 'fo', 'foobar', 'foob']|sortBy(=> _|length, 'DESC') %}
+{% for i in ['bar', 'fo', 'foobar', 'foob']|sort_by(=> _|length, 'DESC') %}
     {{ i }} {# prints 'foobar foob bar fo' #}
 {% endfor %}
 ```
 
 ----------------------------------------------------------------
 
-<a name="countby"></a>
-### |countBy
-**Signature:** `array|countBy(lambda)`
+<a name="count_by"></a>
+### |count_by
+**Signature:** `array|count_by(lambda)`
 
 Sorts an array into groups and returns a count for the number of
 objects in each group.
@@ -168,7 +167,7 @@ string 'true', 'false' or 'null'. Float will be converted to
 integer.
 
 ```twig
-{% for key, count in ['foo', 'bar', 'foobar']|countBy(=> _|first|capitalize) %}
+{% for key, count in ['foo', 'bar', 'foobar']|count_by(=> _|first|capitalize) %}
     * {{ count }} elements start from {{ key }}.
 {% endfor %}
 ```
@@ -182,7 +181,6 @@ will produce
 
 <a name="any"></a>
 ### is any
-**Alias:** `is some`<br>
 **Signature:** `array is any(lambda)`
 
 Returns true if lambda returns true for any element from
@@ -199,7 +197,6 @@ an array.
 
 <a name="every"></a>
 ### is every
-**Alias:** `is all`<br>
 **Signature:** `array is every(lambda)`
 
 Returns true if lambda returns true for every element from

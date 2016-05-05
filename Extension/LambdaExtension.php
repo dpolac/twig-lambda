@@ -38,11 +38,8 @@ class LambdaExtension extends \Twig_Extension
     public function getTests()
     {
         return [
-            new \Twig_SimpleTest('all', '\Underscore\Types\Arrays::matches'),
             new \Twig_SimpleTest('every', '\Underscore\Types\Arrays::matches'),
-
             new \Twig_SimpleTest('any', [$this, 'any']),
-            new \Twig_SimpleTest('some', [$this, 'any']),
         ];
     }
 
@@ -50,7 +47,6 @@ class LambdaExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFilter('map', '\Underscore\Types\Arrays::each'),
-            new \Twig_SimpleFilter('each', '\Underscore\Types\Arrays::each'),
             new \Twig_SimpleFilter('select', '\Underscore\Types\Arrays::each'),
 
             new \Twig_SimpleFilter('filter', '\Underscore\Types\Arrays::filter'),
@@ -58,9 +54,9 @@ class LambdaExtension extends \Twig_Extension
 
             new \Twig_SimpleFilter('unique', 'array_unique'),
 
-            new \Twig_SimpleFilter('groupBy', '\Underscore\Types\Arrays::group'),
-            new \Twig_SimpleFilter('sortBy', '\Underscore\Types\Arrays::sort'),
-            new \Twig_SimpleFilter('countBy', [$this, 'countBy']),
+            new \Twig_SimpleFilter('group_by', '\Underscore\Types\Arrays::group'),
+            new \Twig_SimpleFilter('sort_by', '\Underscore\Types\Arrays::sort'),
+            new \Twig_SimpleFilter('count_by', [$this, 'countBy']),
         ];
     }
 

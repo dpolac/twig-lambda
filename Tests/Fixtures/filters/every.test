@@ -1,8 +1,8 @@
 --TEST--
 "all" test
 --TEMPLATE--
-{{ data is all(=> _ > 6) ? 'YES':'NO' }}
-{{ data is all(=> _ is even) ? 'YES':'NO' }}
+{{ data is every(=> _ > 6) ? 'YES':'NO' }}
+{{ data is every(=> _ is even) ? 'YES':'NO' }}
 {{ data is every(=> _ < 12) ? 'YES':'NO' }}
 --DATA--
 return [ 'data' => [] ];
