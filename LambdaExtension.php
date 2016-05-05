@@ -31,7 +31,7 @@ class LambdaExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('call', [$this, 'call']),
+            new \Twig_SimpleFunction('call', '\DPolac\TwigLambda\LambdaExtension::call'),
         ];
     }
 
@@ -39,7 +39,7 @@ class LambdaExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleTest('every', '\Underscore\Types\Arrays::matches'),
-            new \Twig_SimpleTest('any', [$this, 'any']),
+            new \Twig_SimpleTest('any', '\DPolac\TwigLambda\LambdaExtension::any'),
         ];
     }
 
@@ -56,11 +56,11 @@ class LambdaExtension extends \Twig_Extension
 
             new \Twig_SimpleFilter('group_by', '\Underscore\Types\Arrays::group'),
             new \Twig_SimpleFilter('sort_by', '\Underscore\Types\Arrays::sort'),
-            new \Twig_SimpleFilter('count_by', [$this, 'countBy']),
+            new \Twig_SimpleFilter('count_by', '\DPolac\TwigLambda\LambdaExtension::countBy'),
         ];
     }
 
-    public function countBy(array $array, $callback)
+    public static function countBy(array $array, $callback)
     {
         $result = [];
         foreach ($array as $element) {
@@ -79,7 +79,7 @@ class LambdaExtension extends \Twig_Extension
         return $result;
     }
 
-    public function any(array $array, $callback)
+    public static function any(array $array, $callback)
     {
         if (!is_callable($callback)) {
             throw new \InvalidArgumentException(
@@ -93,7 +93,7 @@ class LambdaExtension extends \Twig_Extension
         return Arrays::matchesAny($array, $callback);
     }
 
-    public function call($callback, array $args = [])
+    public static function call($callback, array $args = [])
     {
         if (!is_callable($callback)) {
             throw new \InvalidArgumentException('First argument must be callable.');
