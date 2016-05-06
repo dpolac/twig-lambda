@@ -3,8 +3,10 @@ lambda can have multiple arguments
 --TEMPLATE--
 {{ call(=> __[0] ~ __[1] ~ __[2], [ 3, 4, 5 ]) }}
 {{ call(=> __|join(','), [6, 'FOO', 'BAR']) }}
+{{ call((a;b;c) => a~b~c, ['A','B','C']) }}
 --DATA--
 return [];
 --EXPECT--
 345
 6,FOO,BAR
+ABC

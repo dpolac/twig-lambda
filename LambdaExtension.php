@@ -21,10 +21,21 @@ class LambdaExtension extends \Twig_Extension
             [
                 '=>' => [
                     'precedence' => 0,
-                    'class' => '\DPolac\TwigLambda\NodeExpression\Lambda'
+                    'class' => '\DPolac\TwigLambda\NodeExpression\SimpleLambda'
                 ],
             ],
-            []
+            [
+                '=>' => [
+                    'precedence' => 0,
+                    'class' => '\DPolac\TwigLambda\NodeExpression\LambdaWithArguments',
+                    'associativity' => \Twig_ExpressionParser::OPERATOR_LEFT
+                ],
+                ';' => [
+                    'precedence' => 5,
+                    'class' => '\DPolac\TwigLambda\NodeExpression\Arguments',
+                    'associativity' => \Twig_ExpressionParser::OPERATOR_RIGHT
+                ],
+            ]
         ];
     }
     
