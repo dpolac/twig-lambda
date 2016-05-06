@@ -1,0 +1,24 @@
+--TEST--
+"groupBy" filter grouping with array key
+--TEMPLATE--
+{% for key,items in data|group_by((v;i)=> i|first ) %}
+ = {{ key }}
+{% for i in items %}
+   * {{ i }}
+{% endfor %}
+{% endfor %}
+--DATA--
+return [ 'data' => [
+    'foo' => 1,
+    'bar' => 2,
+    'tet' => 3,
+    'foobar' => 4,
+] ];
+--EXPECT--
+ = f
+   * 1
+   * 4
+ = b
+   * 2
+ = t
+   * 3

@@ -4,15 +4,18 @@
 {{ data is any(=> _ > 6) ? 'YES':'NO' }}
 {{ data is any(=> _ is even) ? 'YES':'NO' }}
 {{ data is any(=> _ < 0) ? 'YES':'NO' }}
+{{ data is any((_;i) => i is same as('foo')) ? 'YES':'NO' }}
 --DATA--
-return [ 'data' => [1, 2, 3, 4, 5] ];
+return [ 'data' => [1, 2, 3, 4, 5, 'foo' => 6] ];
 --EXPECT--
 NO
 YES
 NO
+YES
 --DATA--
 return [ 'data' => [] ];
 --EXPECT--
+NO
 NO
 NO
 NO
@@ -22,9 +25,11 @@ return [ 'data' => [-1, -7, 13, 1, 5] ];
 YES
 NO
 YES
+NO
 --DATA--
 return [ 'data' => [0, 0, 1, 3] ];
 --EXPECT--
 NO
 YES
+NO
 NO

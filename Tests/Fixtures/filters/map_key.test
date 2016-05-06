@@ -1,0 +1,18 @@
+--TEST--
+"map" filter passes array keys to lambda
+--TEMPLATE--
+{% for i in data|map((v;i)=> i~v ) %}
+ * {{ i }}
+{% endfor %}
+--DATA--
+return [ 'data' => [
+    'a' => 'b',
+    'cd' => 'ef',
+    12 => 'c',
+    'am' => 4,
+] ];
+--EXPECT--
+ * ab
+ * cdef
+ * 12c
+ * am4

@@ -4,9 +4,11 @@
 {{ data is every(=> _ > 6) ? 'YES':'NO' }}
 {{ data is every(=> _ is even) ? 'YES':'NO' }}
 {{ data is every(=> _ < 12) ? 'YES':'NO' }}
+{{ data is every((_;i) => i >= 0) ? 'YES':'NO' }}
 --DATA--
 return [ 'data' => [] ];
 --EXPECT--
+YES
 YES
 YES
 YES
@@ -16,15 +18,29 @@ return [ 'data' => [7, 8, 10] ];
 YES
 NO
 YES
+YES
 --DATA--
 return [ 'data' => [-2, -8, 14, 2, 6] ];
 --EXPECT--
 NO
 YES
 NO
+YES
 --DATA--
 return [ 'data' => [20] ];
 --EXPECT--
 YES
+YES
+NO
+YES
+--DATA--
+return [ 'data' => [
+    -1 => 1,
+    0 => 2,
+    1 => 3,
+] ];
+--EXPECT--
+NO
+NO
 YES
 NO
