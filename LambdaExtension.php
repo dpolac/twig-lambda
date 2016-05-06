@@ -10,7 +10,6 @@
 
 namespace DPolac\TwigLambda;
 
-use Underscore\Types\Arrays;
 
 class LambdaExtension extends \Twig_Extension
 {
@@ -49,7 +48,7 @@ class LambdaExtension extends \Twig_Extension
     public function getTests()
     {
         return [
-            new \Twig_SimpleTest('every', '\Underscore\Types\Arrays::matches'),
+            new \Twig_SimpleTest('every', '\DPolac\TwigLambda\LambdaExtension::every'),
             new \Twig_SimpleTest('any', '\DPolac\TwigLambda\LambdaExtension::any'),
         ];
     }
@@ -57,25 +56,135 @@ class LambdaExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('map', '\Underscore\Types\Arrays::each'),
-            new \Twig_SimpleFilter('select', '\Underscore\Types\Arrays::each'),
+            new \Twig_SimpleFilter('map', '\DPolac\TwigLambda\LambdaExtension::map'),
+            new \Twig_SimpleFilter('select', '\DPolac\TwigLambda\LambdaExtension::map'),
 
-            new \Twig_SimpleFilter('filter', '\Underscore\Types\Arrays::filter'),
-            new \Twig_SimpleFilter('where', '\Underscore\Types\Arrays::filter'),
+            new \Twig_SimpleFilter('filter', '\DPolac\TwigLambda\LambdaExtension::filter'),
+            new \Twig_SimpleFilter('where', '\DPolac\TwigLambda\LambdaExtension::filter'),
 
-            new \Twig_SimpleFilter('unique', 'array_unique'),
-
-            new \Twig_SimpleFilter('group_by', '\Underscore\Types\Arrays::group'),
-            new \Twig_SimpleFilter('sort_by', '\Underscore\Types\Arrays::sort'),
+            new \Twig_SimpleFilter('unique', '\DPolac\TwigLambda\LambdaExtension::unique'),
+            new \Twig_SimpleFilter('group_by', '\DPolac\TwigLambda\LambdaExtension::groupBy'),
+            new \Twig_SimpleFilter('sort_by', '\DPolac\TwigLambda\LambdaExtension::sortBy'),
             new \Twig_SimpleFilter('count_by', '\DPolac\TwigLambda\LambdaExtension::countBy'),
         ];
     }
-
-    public static function countBy(array $array, $callback)
+    
+    public static function map($array, $callback) 
     {
+        if (!is_callable($callback)) {
+            throw new \Twig_Error_Runtime(sprintf(
+                'Second argument of "map" must be callable, but is "%s".', gettype($callback)));
+        }
+        
+        if (is_array($array)) {
+            $array = array_map($callback, $array, array_keys($array));
+        } elseif ($array instanceof \Traversable) {
+            foreach ($array as $i => &$item) {
+                $item = $callback($item, $i);
+            }
+        } else {
+            throw new \Twig_Error_Runtime(sprintf(
+                'First argument of "map" must be array or Traversable, but is "%s".', gettype($array)));
+        }
+        
+        return $array;
+    }
+
+    public static function filter($array, $callback)
+    {
+        if (!is_callable($callback)) {
+            throw new \Twig_Error_Runtime(sprintf(
+                'Second argument of "filter" must be callable, but is "%s".', gettype($callback)));
+        }
+
+        if (is_array($array)) {
+            $array = array_filter($array, $callback, ARRAY_FILTER_USE_BOTH);
+        } elseif ($array instanceof \Traversable) {
+            foreach ($array as $i => &$item) {
+                $item = $callback($item, $i);
+            }
+        } else {
+            throw new \Twig_Error_Runtime(sprintf(
+                'First argument of "filter" must be array or Traversable, but is "%s".', gettype($array)));
+        }
+
+        return $array;
+    }
+
+    public static function unique($array)
+    {
+        if (!is_array($array) && $array instanceof \Traversable) {
+            throw new \Twig_Error_Runtime(sprintf(
+                'Argument of "unique" must be array or Traversable, but is "%s".', gettype($array)));
+        }
+
+        if ($array instanceof \Traversable) {
+            $array = iterator_to_array($array);
+        }
+
+        return array_unique($array);
+    }
+
+    public static function groupBy($array, $callback)
+    {
+        if (!is_callable($callback)) {
+            throw new \Twig_Error_Runtime(sprintf(
+                'Second argument of "group_by" must be callable, but is "%s".', gettype($callback)));
+        }
+
+        if (!is_array($array) && $array instanceof \Traversable) {
+            throw new \Twig_Error_Runtime(sprintf(
+                'First argument of "group_by" must be array or Traversable, but is "%s".', gettype($array)));
+        }
+
+        $results = [];
+        foreach ($array as $i => $item) {
+            $key = $callback($item, $i);
+            if (!isset($results[$key])) {
+                $results[$key] = [];
+            }
+            $results[$key][$i] = $item;
+        }
+        return $results;
+    }
+
+    public static function sortBy($array, $callback, $direction = 'ASC')
+    {
+        if (!is_callable($callback)) {
+            throw new \Twig_Error_Runtime(sprintf(
+                'Second argument of "sort_by" must be callable, but is "%s".', gettype($callback)));
+        }
+
+        if (!is_array($array) && $array instanceof \Traversable) {
+            throw new \Twig_Error_Runtime(sprintf(
+                'First argument of "sort_by" must be array or Traversable, but is "%s".', gettype($array)));
+        }
+
+        if ($array instanceof \Traversable) {
+            $array = iterator_to_array($array);
+        }
+
+        $direction = (strtoupper($direction) === 'DESC') ? SORT_DESC : SORT_ASC;
+        $order = self::map($array, $callback);
+        array_multisort($order, $direction, SORT_REGULAR, $array);
+        return $array;
+    }
+
+    public static function countBy($array, $callback)
+    {
+        if (!is_callable($callback)) {
+            throw new \Twig_Error_Runtime(sprintf(
+                'Second argument of "count_by" must be callable, but is "%s".', gettype($callback)));
+        }
+
+        if (!is_array($array) && $array instanceof \Traversable) {
+            throw new \Twig_Error_Runtime(sprintf(
+                'First argument of "count_by" must be array or Traversable, but is "%s".', gettype($array)));
+        }
+
         $result = [];
-        foreach ($array as $element) {
-            $key = $callback($element);
+        foreach ($array as $i => $element) {
+            $key = $callback($element, $i);
             if (is_bool($key)) {
                 $key = $key ? 'true' : 'false';
             } elseif (is_null($key)) {
@@ -89,19 +198,47 @@ class LambdaExtension extends \Twig_Extension
         }
         return $result;
     }
-
-    public static function any(array $array, $callback)
+    
+    public static function every($array, $callback)
     {
         if (!is_callable($callback)) {
-            throw new \InvalidArgumentException(
-                'Second argument of any must be callable.');
+            throw new \Twig_Error_Runtime(sprintf(
+                'Second argument of "every" must be callable, but is "%s".', gettype($callback)));
         }
 
-        if (count($array) === 0) {
-            return false;
+        if (!is_array($array) && $array instanceof \Traversable) {
+            throw new \Twig_Error_Runtime(sprintf(
+                'First argument of "every" must be array or Traversable, but is "%s".', gettype($array)));
         }
 
-        return Arrays::matchesAny($array, $callback);
+        foreach ($array as $i => $item) {
+            if (!$callback($item, $i)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    
+    public static function any($array, $callback)
+    {
+        if (!is_callable($callback)) {
+            throw new \Twig_Error_Runtime(sprintf(
+                'Second argument of "any" must be callable, but is "%s".', gettype($callback)));
+        }
+
+        if (!is_array($array) && $array instanceof \Traversable) {
+            throw new \Twig_Error_Runtime(sprintf(
+                'First argument of "any" must be array or Traversable, but is "%s".', gettype($array)));
+        }
+
+        foreach ($array as $i => $item) {
+            if ($callback($item, $i)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static function call($callback, array $args = [])
