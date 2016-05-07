@@ -39,21 +39,6 @@ $twig->addExtension(new \DPolac\TwigLambda\LambdaExtension());
 
 ## Usage
 
-**Filters:**
-    [map](#map)
-    [filter](#filter)
-    [unique](#unique)
-    [group_by](#group_by)
-    [sort_by](#sort_by)
-    [count_by](#count_by)
-    <br>
-**Tests:**
-    [any](#any)
-    [every](#every)
-    <br>
-**Functions:**
-    [call](#call)
-
 <a name="lambda"></a>
 ### Lambda expression
 To create lambda expression prepend any valid Twig expression
@@ -72,6 +57,26 @@ variables available:
 => _ is even
 => __[0] + __[1]
 ```
+
+To create lambda expression with list of arguments, add it
+before `=>` operator. Separate multiple arguments with
+semicolons. You can use braces for readability.
+
+```
+x => x + 1
+(book) => book.author
+arg1; arg2 => arg1 ~ arg2
+(a; b; c) => a + b - c
+```
+
+Note that if you use list of arguments, `_` variable is not
+longer available.
+
+----------------------------------------------------------------
+
+Below is a list of available filters and tests. All works
+with arrays and any Traversable object and preserve it keys.
+All lambdas are called with two arguments: element and key.
 
 ----------------------------------------------------------------
 
