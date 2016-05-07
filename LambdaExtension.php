@@ -79,9 +79,11 @@ class LambdaExtension extends \Twig_Extension
         if (is_array($array)) {
             $array = array_map($callback, $array, array_keys($array));
         } elseif ($array instanceof \Traversable) {
-            foreach ($array as $i => &$item) {
-                $item = $callback($item, $i);
+            $result = [];
+            foreach ($array as $i => $item) {
+                $result[$i] = $callback($item, $i);
             }
+            $array = $result;
         } else {
             throw new \Twig_Error_Runtime(sprintf(
                 'First argument of "map" must be array or Traversable, but is "%s".', gettype($array)));
@@ -100,9 +102,13 @@ class LambdaExtension extends \Twig_Extension
         if (is_array($array)) {
             $array = array_filter($array, $callback, ARRAY_FILTER_USE_BOTH);
         } elseif ($array instanceof \Traversable) {
-            foreach ($array as $i => &$item) {
-                $item = $callback($item, $i);
+            $result = [];
+            foreach ($array as $i => $item) {
+                if ($callback($item, $i)) {
+                    $result[$i] = $item;
+                }
             }
+            $array = $result;
         } else {
             throw new \Twig_Error_Runtime(sprintf(
                 'First argument of "filter" must be array or Traversable, but is "%s".', gettype($array)));
@@ -113,7 +119,7 @@ class LambdaExtension extends \Twig_Extension
 
     public static function unique($array)
     {
-        if (!is_array($array) && $array instanceof \Traversable) {
+        if (!is_array($array) && !($array instanceof \Traversable)) {
             throw new \Twig_Error_Runtime(sprintf(
                 'Argument of "unique" must be array or Traversable, but is "%s".', gettype($array)));
         }
@@ -132,7 +138,7 @@ class LambdaExtension extends \Twig_Extension
                 'Second argument of "group_by" must be callable, but is "%s".', gettype($callback)));
         }
 
-        if (!is_array($array) && $array instanceof \Traversable) {
+        if (!is_array($array) && !($array instanceof \Traversable)) {
             throw new \Twig_Error_Runtime(sprintf(
                 'First argument of "group_by" must be array or Traversable, but is "%s".', gettype($array)));
         }
@@ -155,7 +161,7 @@ class LambdaExtension extends \Twig_Extension
                 'Second argument of "sort_by" must be callable, but is "%s".', gettype($callback)));
         }
 
-        if (!is_array($array) && $array instanceof \Traversable) {
+        if (!is_array($array) && !($array instanceof \Traversable)) {
             throw new \Twig_Error_Runtime(sprintf(
                 'First argument of "sort_by" must be array or Traversable, but is "%s".', gettype($array)));
         }
@@ -177,7 +183,7 @@ class LambdaExtension extends \Twig_Extension
                 'Second argument of "count_by" must be callable, but is "%s".', gettype($callback)));
         }
 
-        if (!is_array($array) && $array instanceof \Traversable) {
+        if (!is_array($array) && !($array instanceof \Traversable)) {
             throw new \Twig_Error_Runtime(sprintf(
                 'First argument of "count_by" must be array or Traversable, but is "%s".', gettype($array)));
         }
@@ -206,7 +212,7 @@ class LambdaExtension extends \Twig_Extension
                 'Second argument of "every" must be callable, but is "%s".', gettype($callback)));
         }
 
-        if (!is_array($array) && $array instanceof \Traversable) {
+        if (!is_array($array) && !($array instanceof \Traversable)) {
             throw new \Twig_Error_Runtime(sprintf(
                 'First argument of "every" must be array or Traversable, but is "%s".', gettype($array)));
         }
@@ -227,7 +233,7 @@ class LambdaExtension extends \Twig_Extension
                 'Second argument of "any" must be callable, but is "%s".', gettype($callback)));
         }
 
-        if (!is_array($array) && $array instanceof \Traversable) {
+        if (!is_array($array) && !($array instanceof \Traversable)) {
             throw new \Twig_Error_Runtime(sprintf(
                 'First argument of "any" must be array or Traversable, but is "%s".', gettype($array)));
         }
