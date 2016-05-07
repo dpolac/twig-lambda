@@ -16,3 +16,15 @@ return [ 'data' => [
  * cdef
  * 12c
  * am4
+--DATA--
+return [ 'data' => new ArrayIterator([
+    'a' => 'b',
+    'cd' => 'ef',
+    12 => 'c',
+    'am' => 4,
+]) ];
+--EXPECT--
+ * ab
+ * cdef
+ * 12c
+ * am4

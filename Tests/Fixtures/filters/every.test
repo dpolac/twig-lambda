@@ -20,7 +20,7 @@ NO
 YES
 YES
 --DATA--
-return [ 'data' => [-2, -8, 14, 2, 6] ];
+return [ 'data' => new ArrayIterator([-2, -8, 14, 2, 6]) ];
 --EXPECT--
 NO
 YES

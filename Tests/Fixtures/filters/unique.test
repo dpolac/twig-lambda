@@ -19,6 +19,12 @@ return [ 'data' => [1, 2, 1, 3] ];
  * 2
  * 3
 --DATA--
+return [ 'data' => new ArrayIterator([1, 3, 1, 2, 3]) ];
+--EXPECT--
+ * 1
+ * 3
+ * 2
+--DATA--
 return [ 'data' => ['foo', 'bar', 'foo'] ]
 --EXPECT--
  * foo

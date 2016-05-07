@@ -22,3 +22,18 @@ return [ 'data' => [
    * 2
  = t
    * 3
+--DATA--
+return [ 'data' => new ArrayIterator([
+    'foo' => 1,
+    'bar' => 2,
+    'tet' => 3,
+    'foobar' => 4,
+]) ];
+--EXPECT--
+ = f
+   * 1
+   * 4
+ = b
+   * 2
+ = t
+   * 3

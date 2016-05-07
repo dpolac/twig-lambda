@@ -18,3 +18,17 @@ d: 2
 c: 5
 b: 1
 a: 4
+--DATA--
+return [ 'data' => new ArrayIterator([
+    'b' => 1,
+    'd' => 2,
+    'e' => 3,
+    'a' => 4,
+    'c' => 5,
+]) ];
+--EXPECT--
+e: 3
+d: 2
+c: 5
+b: 1
+a: 4

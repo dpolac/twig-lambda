@@ -17,7 +17,7 @@ return [ 'data' => [ 'foo', 'bar', 'tet' ] ];
  = t
    * tet
 --DATA--
-return [ 'data' => [ 'foo', 'foobar', 'tet', 'bar', 'tetfoo' ] ];
+return [ 'data' => new ArrayIterator([ 'foo', 'foobar', 'tet', 'bar', 'tetfoo' ]) ];
 --EXPECT--
  = f
    * foo

@@ -33,3 +33,17 @@ return [ 'data' => [
  * a
  * c
  * e
+--DATA--
+return [ 'data' => new ArrayIterator([
+    [ 'foo' => 'a', 'bar' => 20 ],
+    [ 'foo' => 'b', 'bar' => -1 ],
+    [ 'foo' => 'c', 'bar' => 20 ],
+    [ 'foo' => 'd', 'bar' => -1 ],
+    [ 'foo' => 'e', 'bar' => 20 ],
+]) ];
+--EXPECT--
+ * b
+ * d
+ * a
+ * c
+ * e

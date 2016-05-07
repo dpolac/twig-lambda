@@ -18,3 +18,17 @@ f: 2
 b: 2
 t: 1
 2: 1
+--DATA--
+return [ 'data' => new ArrayIterator([
+    'foo' => 1,
+    'bar' => null,
+    'foobar' => [1, 2],
+    'tetbar' => "abc",
+    'barbar' => 12,
+    2001 => 12,
+]) ];
+--EXPECT--
+f: 2
+b: 2
+t: 1
+2: 1
