@@ -131,8 +131,16 @@ class LambdaExtension extends \Twig_Extension
         return array_unique($array);
     }
 
-    public static function groupBy($array, $callback)
+    public static function groupBy($array, $callback, $keyType = 'detect')
     {
+        $keyType = strtolower($keyType);
+
+        if (!in_array($keyType, ['scalar', 'object', 'detect'])) {
+            throw new \Twig_Error_Runtime(sprintf(
+                'Third argument of "group_by" must be one of "scalar", "object" and "detect", '.
+                'but is "%s".', $keyType));
+        }
+
         if (!is_callable($callback)) {
             throw new \Twig_Error_Runtime(sprintf(
                 'Second argument of "group_by" must be callable, but is "%s".', gettype($callback)));
@@ -143,15 +151,65 @@ class LambdaExtension extends \Twig_Extension
                 'First argument of "group_by" must be array or Traversable, but is "%s".', gettype($array)));
         }
 
-        $results = [];
+        $results = null;
+        $hashes = [];
         foreach ($array as $i => $item) {
             $key = $callback($item, $i);
-            if (!isset($results[$key])) {
-                $results[$key] = [];
+
+            if ('detect' === $keyType) {
+                if (is_object($key)) {
+                    $keyType = 'object';
+                } else if (is_scalar($key)) {
+                    $keyType = 'scalar';
+                } else {
+                    throw new \Twig_Error_Runtime(sprintf(
+                        'Only allowed values returned by "group_by" are '.
+                        'callback are scalars and objects with implemented __toString() method, '.
+                        'but it returned "%s".', gettype($key)));
+                }
             }
-            $results[$key][$i] = $item;
+
+            if ('scalar' === $keyType) {
+                if (is_object($key) && method_exists($key, '__toString')) {
+                    $key = (string)$key;
+                } elseif (!is_scalar($key)) {
+                    throw new \Twig_Error_Runtime(sprintf(
+                        'Only allowed values returned by "group_by" callback with "scalar" ' .
+                        'as key type are scalars and objects with implemented __toString() method, ' .
+                        'but it returned "%s".', gettype($key)));
+                }
+
+                if (!isset($results[$key])) {
+                    $results[$key] = [$i => $item];
+                } else {
+                    $results[$key][$i] = $item;
+                }
+            } elseif ('object' === $keyType) {
+                if (!is_object($key)) {
+                    throw new \Twig_Error_Runtime(sprintf(
+                        'Only allowed values returned by "group_by" callback with "object" ' .
+                        'as key type are objects, but it returned "%s".', gettype($key)));
+                }
+
+                $hash = \spl_object_hash($key);
+                $hashes[$hash] = $key;
+
+                if (!isset($results[$hash])) {
+                    $results[$hash] = [$i => $item];
+                } else {
+                    $results[$hash][$i] = $item;
+                }
+            }
         }
-        return $results;
+
+        if ('scalar' === $keyType) {
+            return $results;
+        } elseif ('object' === $keyType) {
+            return new GroupByObjectIterator($results, $hashes);
+        } else {
+            // $keyType is still 'detect' if $array is empty
+            return [];
+        }
     }
 
     public static function sortBy($array, $callback, $direction = 'ASC')
