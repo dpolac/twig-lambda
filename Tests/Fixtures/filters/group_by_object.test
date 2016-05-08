@@ -1,0 +1,32 @@
+--TEST--
+"groupBy" filter can group by object
+--TEMPLATE--
+{% for category, articles in array|group_by(=> _.category) %}
+  = {{ category.name }}
+{% for article in articles %}
+    * {{ article.name }}
+{% endfor %}
+{% endfor %}
+--DATA--
+$category = [];
+foreach (['A', 'B', 'C'] as $name) {
+    $category[$name] = new \StdClass;
+    $category[$name]->name = $name;
+}
+
+return [ 'array' => [
+    [ 'name' => 'foo', 'category' => $category['A'] ],
+    [ 'name' => 'bar', 'category' => $category['B'] ],
+    [ 'name' => 'tet', 'category' => $category['C'] ],
+    [ 'name' => 'tet 2', 'category' => $category['C'] ],
+    [ 'name' => 'buzz', 'category' => $category['A'] ],
+] ];
+--EXPECT--
+  = A
+    * foo
+    * buzz
+  = B
+    * bar
+  = C
+    * tet
+    * tet 2
