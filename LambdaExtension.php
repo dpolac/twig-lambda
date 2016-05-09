@@ -151,7 +151,7 @@ class LambdaExtension extends \Twig_Extension
                 'First argument of "group_by" must be array or Traversable, but is "%s".', gettype($array)));
         }
 
-        $results = null;
+        $results = [];
         $hashes = [];
         foreach ($array as $i => $item) {
             $key = $callback($item, $i);
