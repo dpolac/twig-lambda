@@ -247,6 +247,6 @@ lambda as an argument.
 ```twig
 {{ call(=> _ * 2, [10]) }}
 {# prints '20' #}
-{{ call(=> _.foo, [{foo: 12}]} }}
+{{ call(=> _.foo, [{foo: 12}]) }}
 {# prints '12' #}
 ```
