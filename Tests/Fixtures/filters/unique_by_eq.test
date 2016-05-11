@@ -1,0 +1,29 @@
+--TEST--
+"unique_by" works with '==' and '===' as parameter
+--TEMPLATE--
+{% for i in list|unique_by('==') %}
+ * {{ i.data }}
+{% endfor %}
+===
+{% for i in list|unique_by('===') %}
+ * {{ i.data }}
+{% endfor %}
+--DATA--
+$obj1 = new \StdClass;
+$obj1->data = "a";
+$obj2 = new \StdClass;
+$obj2->data = "a";
+$obj3 = new \StdClass;
+$obj3->data = "b";
+$obj4 = new \StdClass;
+$obj4->data = "c";
+return [ 'list' => [$obj1, $obj4, $obj2, $obj3, $obj1, $obj3] ];
+--EXPECT--
+ * a
+ * c
+ * b
+===
+ * a
+ * c
+ * a
+ * b
