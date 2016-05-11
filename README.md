@@ -8,7 +8,7 @@
 
 Listing names of all authors ordered by age:
 ```twig
-{% for author in articles|map(=> _.author)|unique|sort_by(=> _.age) %}
+{% for author in articles|map(=> _.author)|unique_by('===')|sort_by(=> _.age) %}
     * {{ author.name }}, {{ author.age }}
 {% endfor %}
 ```
@@ -111,11 +111,29 @@ Returns array of elements that passes a test specified by lambda.
 
 ----------------------------------------------------------------
 
-<a name="unique"></a>
-### |unique
-**Signature:** `array|unique`
+<a name="unique_by"></a>
+### |unique_by
+**Signature:** `array|unique_by(lambda|'==='|'==')`
 
-Returns array with every element occurring only once.
+Returns array of unique elements. Uniqueness is checked with
+passed lambda. PHP operators == or === will be used if
+string '==' or '===' is passed instead of lambda.
+
+Lambda should have two arguments - items to check. Keys of
+elements are also passed as third and fourth argument.
+
+```twig
+    {% for i in [1, 2, 2, 3, 1]|unique_by((i1;i2) => i1 == i2) %}
+        {{ i }} {# prints '1 2 3' #}
+    {% endfor %}
+```
+equivalent
+```twig
+    {% for i in [1, 2, 2, 3, 1]|unique_by('==') %}
+        {{ i }} {# prints '1 2 3' #}
+    {% endfor %}
+```
+
 
 ----------------------------------------------------------------
 
