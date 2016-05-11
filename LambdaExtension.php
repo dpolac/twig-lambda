@@ -62,7 +62,7 @@ class LambdaExtension extends \Twig_Extension
             new \Twig_SimpleFilter('filter', '\DPolac\TwigLambda\LambdaExtension::filter'),
             new \Twig_SimpleFilter('where', '\DPolac\TwigLambda\LambdaExtension::filter'),
 
-            new \Twig_SimpleFilter('unique', '\DPolac\TwigLambda\LambdaExtension::unique'),
+            new \Twig_SimpleFilter('unique_by', '\DPolac\TwigLambda\LambdaExtension::uniqueBy'),
             new \Twig_SimpleFilter('group_by', '\DPolac\TwigLambda\LambdaExtension::groupBy'),
             new \Twig_SimpleFilter('sort_by', '\DPolac\TwigLambda\LambdaExtension::sortBy'),
             new \Twig_SimpleFilter('count_by', '\DPolac\TwigLambda\LambdaExtension::countBy'),
@@ -117,18 +117,35 @@ class LambdaExtension extends \Twig_Extension
         return $array;
     }
 
-    public static function unique($array)
+    public static function uniqueBy($array, $callback)
     {
         if (!is_array($array) && !($array instanceof \Traversable)) {
             throw new \Twig_Error_Runtime(sprintf(
-                'Argument of "unique" must be array or Traversable, but is "%s".', gettype($array)));
+                'First argument of "unique_by" must be array or Traversable, but is "%s".', gettype($array)));
+        }
+
+        if (!is_callable($callback)) {
+            throw new \Twig_Error_Runtime(sprintf(
+                'Second argument of "unique_by" must be callable, but is "%s".', gettype($callback)));
         }
 
         if ($array instanceof \Traversable) {
             $array = iterator_to_array($array);
         }
 
-        return array_unique($array);
+        $result = [];
+        foreach ($array as $i => $item) {
+            foreach ($array as $j => $previous) {
+                if ($i === $j) {
+                    // add to results if already checked every previous element
+                    $result[$i] = $item;
+                } elseif (isset($result[$j]) && $callback($item, $previous, $i, $j)) {
+                    // skip if is identical with value which is already in results array
+                    continue 2;
+                }
+            }
+        }
+        return $result;
     }
 
     public static function groupBy($array, $callback, $keyType = 'detect')

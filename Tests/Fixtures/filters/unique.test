@@ -1,7 +1,7 @@
 --TEST--
-"unique" filter
+"unique_by" filter
 --TEMPLATE--
-{% for i in data|unique %}
+{% for i in data|unique_by((i1; i2) => i1 == i2) %}
  * {{ i }}
 {% endfor %}
 --DATA--
