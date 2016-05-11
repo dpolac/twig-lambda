@@ -124,9 +124,13 @@ class LambdaExtension extends \Twig_Extension
                 'First argument of "unique_by" must be array or Traversable, but is "%s".', gettype($array)));
         }
 
-        if (!is_callable($callback)) {
+        if ('==' === $callback) {
+            $callback = function($item1, $item2) { return $item1 == $item2; };
+        } else if ('===' === $callback) {
+            $callback = function($item1, $item2) { return $item1 === $item2; };
+        } else if (!is_callable($callback)) {
             throw new \Twig_Error_Runtime(sprintf(
-                'Second argument of "unique_by" must be callable, but is "%s".', gettype($callback)));
+                'Second argument of "unique_by" must be callable, "==" or "===", but is "%s".', gettype($callback)));
         }
 
         if ($array instanceof \Traversable) {
