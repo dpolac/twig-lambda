@@ -1,7 +1,6 @@
 --TEST--
 "sortBy" filter
 --TEMPLATE--
---TEMPLATE--
 {% for i in data|sort_by(=> _.bar ) %}
  * {{ i.foo }}
 {% endfor %}
