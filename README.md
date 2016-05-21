@@ -60,7 +60,7 @@ variables available:
 
 To create lambda expression with list of arguments, add it
 before `=>` operator. Separate multiple arguments with
-semicolons. You can use braces for readability.
+semicolons. You can use brackets for readability.
 
 ```
 x => x + 1
