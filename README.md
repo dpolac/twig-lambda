@@ -228,8 +228,8 @@ an array.
 **Returns true if array is empty.**
 
 ```twig
-{{ [1, 2, 3] is any(=> _ is even) ? "There is even element in the array." }}
-{# prints 'There is even element in the array.' #}
+{{ [1, 2, 3] is every(=> _ > 0) ? "All elements in the array are positive." }}
+{# prints 'All elements in the array are positive.' #}
 ```
 
 ----------------------------------------------------------------
