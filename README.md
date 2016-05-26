@@ -25,14 +25,24 @@ Counting elements starting from specified letter:
 <a name="install"></a>
 ## Installation
 
-### Install via Composer:
+**Install via Composer:**
 ```bash
 composer require dpolac/twig-lambda
 ```
 
-### Add the extension to Twig:
+**Add the extension to Twig:**
 ```php
 $twig->addExtension(new \DPolac\TwigLambda\LambdaExtension());
+```
+
+**... or if you use Symfony**, add the following to your `services.yml` config file:
+
+```yaml
+services:
+    # ...
+    dpolac.twig_lambda.extension:
+        class: DPolac\TwigLambda\LambdaExtension
+        tags: [ { name: twig.extension } ]
 ```
 
 ----------------------------------------------------------------
