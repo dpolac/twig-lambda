@@ -22,7 +22,8 @@
     ],
     "require": {
         "php": "^5.4 || ^7.0",
-        "twig/twig": "^1.0"
+        "twig/twig": "^1.0",
+        "dpolac/dictionary": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~5.0"

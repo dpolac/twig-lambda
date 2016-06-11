@@ -10,6 +10,7 @@
 
 namespace DPolac\TwigLambda;
 
+use DPolac\Dictionary;
 
 class LambdaExtension extends \Twig_Extension
 {
@@ -79,7 +80,7 @@ class LambdaExtension extends \Twig_Extension
         if (is_array($array)) {
             $array = array_map($callback, $array, array_keys($array));
         } elseif ($array instanceof \Traversable) {
-            $result = [];
+            $result = new Dictionary();
             foreach ($array as $i => $item) {
                 $result[$i] = $callback($item, $i);
             }
@@ -102,7 +103,7 @@ class LambdaExtension extends \Twig_Extension
         if (is_array($array)) {
             $array = array_filter($array, $callback, ARRAY_FILTER_USE_BOTH);
         } elseif ($array instanceof \Traversable) {
-            $result = [];
+            $result = new Dictionary();
             foreach ($array as $i => $item) {
                 if ($callback($item, $i)) {
                     $result[$i] = $item;
@@ -134,10 +135,15 @@ class LambdaExtension extends \Twig_Extension
         }
 
         if ($array instanceof \Traversable) {
-            $array = iterator_to_array($array);
+            if ($array instanceof \Iterator) {
+                // convert Iterator to IteratorAggregate for nested foreach
+                $array = Dictionary::fromArray($array);
+            }
+            $result = new Dictionary();
+        } else {
+            $result = [];
         }
-
-        $result = [];
+        
         foreach ($array as $i => $item) {
             foreach ($array as $j => $previous) {
                 if ($i === $j) {
@@ -152,15 +158,8 @@ class LambdaExtension extends \Twig_Extension
         return $result;
     }
 
-    public static function groupBy($array, $callback, $keyType = 'detect')
+    public static function groupBy($array, $callback)
     {
-        $keyType = strtolower($keyType);
-
-        if (!in_array($keyType, ['scalar', 'object', 'detect'])) {
-            throw new \Twig_Error_Runtime(sprintf(
-                'Third argument of "group_by" must be one of "scalar", "object" and "detect", '.
-                'but is "%s".', $keyType));
-        }
 
         if (!is_callable($callback)) {
             throw new \Twig_Error_Runtime(sprintf(
@@ -172,65 +171,20 @@ class LambdaExtension extends \Twig_Extension
                 'First argument of "group_by" must be array or Traversable, but is "%s".', gettype($array)));
         }
 
-        $results = [];
-        $hashes = [];
+        $results = new Dictionary();
+
         foreach ($array as $i => $item) {
             $key = $callback($item, $i);
 
-            if ('detect' === $keyType) {
-                if (is_object($key)) {
-                    $keyType = 'object';
-                } else if (is_scalar($key)) {
-                    $keyType = 'scalar';
-                } else {
-                    throw new \Twig_Error_Runtime(sprintf(
-                        'Only allowed values returned by "group_by" are '.
-                        'callback are scalars and objects with implemented __toString() method, '.
-                        'but it returned "%s".', gettype($key)));
-                }
+            if (!isset($results[$key])) {
+                $results[$key] = [$i => $item];
+            } else {
+                $results[$key][$i] = $item;
             }
 
-            if ('scalar' === $keyType) {
-                if (is_object($key) && method_exists($key, '__toString')) {
-                    $key = (string)$key;
-                } elseif (!is_scalar($key)) {
-                    throw new \Twig_Error_Runtime(sprintf(
-                        'Only allowed values returned by "group_by" callback with "scalar" ' .
-                        'as key type are scalars and objects with implemented __toString() method, ' .
-                        'but it returned "%s".', gettype($key)));
-                }
-
-                if (!isset($results[$key])) {
-                    $results[$key] = [$i => $item];
-                } else {
-                    $results[$key][$i] = $item;
-                }
-            } elseif ('object' === $keyType) {
-                if (!is_object($key)) {
-                    throw new \Twig_Error_Runtime(sprintf(
-                        'Only allowed values returned by "group_by" callback with "object" ' .
-                        'as key type are objects, but it returned "%s".', gettype($key)));
-                }
-
-                $hash = \spl_object_hash($key);
-                $hashes[$hash] = $key;
-
-                if (!isset($results[$hash])) {
-                    $results[$hash] = [$i => $item];
-                } else {
-                    $results[$hash][$i] = $item;
-                }
-            }
         }
 
-        if ('scalar' === $keyType) {
-            return $results;
-        } elseif ('object' === $keyType) {
-            return new GroupByObjectIterator($results, $hashes);
-        } else {
-            // $keyType is still 'detect' if $array is empty
-            return [];
-        }
+        return $results;
     }
 
     public static function sortBy($array, $callback, $direction = 'ASC')
@@ -246,13 +200,18 @@ class LambdaExtension extends \Twig_Extension
         }
 
         if ($array instanceof \Traversable) {
-            $array = iterator_to_array($array);
+            if ($array instanceof Dictionary) {
+                $array = $array->getCopy();
+            } else {
+                $array = Dictionary::fromArray($array);
+            }
+            return $array->sortBy($callback, $direction);
+        } else {
+            $direction = (strtoupper($direction) === 'DESC') ? SORT_DESC : SORT_ASC;
+            $order = self::map($array, $callback);
+            array_multisort($order, $direction, SORT_REGULAR, $array);
+            return $array;
         }
-
-        $direction = (strtoupper($direction) === 'DESC') ? SORT_DESC : SORT_ASC;
-        $order = self::map($array, $callback);
-        array_multisort($order, $direction, SORT_REGULAR, $array);
-        return $array;
     }
 
     public static function countBy($array, $callback)
@@ -267,7 +226,7 @@ class LambdaExtension extends \Twig_Extension
                 'First argument of "count_by" must be array or Traversable, but is "%s".', gettype($array)));
         }
 
-        $result = [];
+        $result = new Dictionary();
         foreach ($array as $i => $element) {
             $key = $callback($element, $i);
             if (is_bool($key)) {
