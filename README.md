@@ -125,8 +125,8 @@ Returns array of elements that passes a test specified by lambda.
 ### |unfold
 **Signature:** `state|unfold(lambda[, retval = []])`
 
-Given a lambda that returns an array `[state, value]` or `null`, repeatedly
-calls the function until it returns `null` passing the new `state` on each
+Given a lambda that returns an array `[value, state]` or `null`, repeatedly
+calls the function until it returns `null`, passing the new `state` on each
 call. Returns an array of the accumulated values.
 
 
