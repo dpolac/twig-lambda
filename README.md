@@ -121,6 +121,22 @@ Returns array of elements that passes a test specified by lambda.
 
 ----------------------------------------------------------------
 
+<a name="unfold"></a>
+### |unfold
+**Signature:** `state|unfold(lambda[, retval = []])`
+
+Given a lambda that returns an array `[state, value]` or `null`, repeatedly
+calls the function until it returns `null` passing the new `state` on each
+call. Returns an array of the accumulated values.
+
+
+```twig
+{% do [1, 1]|unfold(=> _[1] > 1000 ? null : [ _[0] + _[1], [ _[1], _[0] + _[1]]], [1, 1]) %}
+{# Calculates the Fibonacci numbers up to and including 1597. #}
+```
+
+----------------------------------------------------------------
+
 <a name="unique_by"></a>
 ### |unique_by
 **Signature:** `array|unique_by(lambda|'==='|'==')`

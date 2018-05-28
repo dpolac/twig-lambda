@@ -67,6 +67,7 @@ class LambdaExtension extends \Twig_Extension
             new \Twig_SimpleFilter('group_by', '\DPolac\TwigLambda\LambdaExtension::groupBy'),
             new \Twig_SimpleFilter('sort_by', '\DPolac\TwigLambda\LambdaExtension::sortBy'),
             new \Twig_SimpleFilter('count_by', '\DPolac\TwigLambda\LambdaExtension::countBy'),
+            new \Twig_SimpleFilter('unfold', '\DPolac\TwigLambda\LambdaExtension::unfold'),
         ];
     }
     
@@ -291,6 +292,25 @@ class LambdaExtension extends \Twig_Extension
             throw new \InvalidArgumentException('First argument must be callable.');
         }
         return call_user_func_array($callback, $args);
+    }
+    
+    public static function unfold($state, $callback, array $unfolded = [])
+    {
+        if (!is_callable($callback)) {
+            throw new \InvalidArgumentException('First argument must be callable.');
+        }
+        
+        while (true)
+        {
+            $retval = $callback($state);
+            if (is_null($retval))
+                break;
+            
+            list ($newVal, $state) = $retval;
+            $unfolded[] = $newVal;
+        }
+        
+        return $unfolded;
     }
 
     public function getName()
