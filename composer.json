@@ -22,7 +22,7 @@
     ],
     "require": {
         "php": "^5.4 || ^7.0",
-        "twig/twig": "^1.0",
+        "twig/twig": "^1.0 || ^2.0",
         "dpolac/dictionary": "^1.0"
     },
     "require-dev": {
