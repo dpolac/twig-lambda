@@ -10,15 +10,17 @@
 
 namespace DPolac\TwigLambda\NodeExpression;
 
+use Twig\Compiler;
+use Twig\Node\Node;
 
 class SimpleLambda extends Lambda
 {
-    public function __construct(\Twig_Node $node, $lineno)
+    public function __construct(Node $node, int $lineno)
     {
         parent::__construct(array('node' => $node), array(), $lineno);
     }
 
-    public function compile(\Twig_Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $this->compileWithArguments($compiler, 'node', ['_']);
     }
