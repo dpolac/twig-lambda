@@ -27,13 +27,13 @@ class LambdaExtension extends AbstractExtension
     {
         return [
             [
-                '=>' => [
+                '==>' => [
                     'precedence' => 0,
                     'class' => SimpleLambda::class,
                 ],
             ],
             [
-                '=>' => [
+                '==>' => [
                     'precedence' => 0,
                     'class' => LambdaWithArguments::class,
                     'associativity' => ExpressionParser::OPERATOR_LEFT

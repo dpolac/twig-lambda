@@ -1,7 +1,7 @@
 --TEST--
 "groupBy" filter grouping with array key
 --TEMPLATE--
-{% for key,items in data|group_by((v;i)=> i|first ) %}
+{% for key,items in data|group_by((v;i)==> i|first ) %}
  = {{ key }}
 {% for i in items %}
    * {{ i }}

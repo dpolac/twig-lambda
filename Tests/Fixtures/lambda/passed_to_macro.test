@@ -3,7 +3,7 @@ lambda can be passed to macro
 --TEMPLATE--
 {% import "macro.twig" as macro %}
 {% set prefix = ' * ' %}
-{{ macro.print(data, => prefix ~ _ ~ suffix) }}
+{{ macro.print(data, ==> prefix ~ _ ~ suffix) }}
 --TEMPLATE(macro.twig)--
 {% macro print(list, callback) %}
 {% set prefix = 'WRONG! ' %}

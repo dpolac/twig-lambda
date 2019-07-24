@@ -1,9 +1,9 @@
 --TEST--
 lambda can be assigned to variable
 --TEMPLATE--
-{% set fn = => 'FOO' -%}
+{% set fn = ==> 'FOO' -%}
 {{ call(fn) }}
-{% set fn = (x; y) => 'BAR' -%}
+{% set fn = (x; y) ==> 'BAR' -%}
 {{ call(fn) }}
 --DATA--
 return [];

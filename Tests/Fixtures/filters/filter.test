@@ -1,7 +1,7 @@
 --TEST--
 "filter" filter
 --TEMPLATE--
-{% for i, n in data|filter(=> _ is even) %}
+{% for i, n in data|filter(==> _ is even) %}
 {{ i }}: {{ n }}
 {% else %}
 NOTHING
