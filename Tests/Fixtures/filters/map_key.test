@@ -1,7 +1,7 @@
 --TEST--
 "map" filter passes array keys to lambda
 --TEMPLATE--
-{% for i in data|map((v;i)=> i~v ) %}
+{% for i in data|map((v;i)==> i~v ) %}
  * {{ i }}
 {% endfor %}
 --DATA--

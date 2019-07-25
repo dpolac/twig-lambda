@@ -1,7 +1,7 @@
 --TEST--
 "sortBy" filter passes array keys to lambda
 --TEMPLATE--
-{% for key, value in data|sort_by((_;i)=> i, 'DESC') %}
+{% for key, value in data|sort_by((_;i)==> i, 'DESC') %}
 {{ key }}: {{ value }}
 {% endfor %}
 --DATA--

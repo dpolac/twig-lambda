@@ -1,7 +1,7 @@
 --TEST--
 "countBy" filter counted with array key
 --TEMPLATE--
-{% for key, value in data|count_by((_;key)=> key|first ) %}
+{% for key, value in data|count_by((_;key)==> key|first ) %}
 {{ key }}: {{ value }}
 {% endfor %}
 --DATA--

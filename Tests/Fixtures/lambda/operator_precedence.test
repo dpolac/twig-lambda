@@ -1,27 +1,27 @@
 --TEST--
 lambda operator have lowest priority
 --TEMPLATE--
-{{ call(=> _ + 1, [2]) }}
-{{ call(=> _ - 1, [2]) }}
-{{ call(=> _ * 2, [4]) }}
-{{ call(=> _ / 5, [10]) }}
-{{ call(=> _ % 2, [9]) }}
-{{ call(=> _ ~ 1, [1]) }}
-{{ call(=> _ b-or 5, [3]) }}
-{{ call(=> _[0], [[1]]) }}
-{{ call(=> _.foo, [{foo:'bar'}]) }}
-{{ call(=> _|first, ['foobar']) }}
+{{ call(==> _ + 1, [2]) }}
+{{ call(==> _ - 1, [2]) }}
+{{ call(==> _ * 2, [4]) }}
+{{ call(==> _ / 5, [10]) }}
+{{ call(==> _ % 2, [9]) }}
+{{ call(==> _ ~ 1, [1]) }}
+{{ call(==> _ b-or 5, [3]) }}
+{{ call(==> _[0], [[1]]) }}
+{{ call(==> _.foo, [{foo:'bar'}]) }}
+{{ call(==> _|first, ['foobar']) }}
 ===
-{{ call(a => a + 1, [2]) }}
-{{ call((a; b) => a - b, [2, 1]) }}
-{{ call(c => c * 2, [4]) }}
-{{ call(abc => abc / 5, [10]) }}
-{{ call(abc => abc % 2, [9]) }}
-{{ call(n => n ~ 1, [1]) }}
-{{ call(num => num b-or 5, [3]) }}
-{{ call(_ => _[0], [[1]]) }}
-{{ call(xcv => xcv.foo, [{foo:'bar'}]) }}
-{{ call(Aaa => Aaa|first, ['foobar']) }}
+{{ call(a ==> a + 1, [2]) }}
+{{ call((a; b) ==> a - b, [2, 1]) }}
+{{ call(c ==> c * 2, [4]) }}
+{{ call(abc ==> abc / 5, [10]) }}
+{{ call(abc ==> abc % 2, [9]) }}
+{{ call(n ==> n ~ 1, [1]) }}
+{{ call(num ==> num b-or 5, [3]) }}
+{{ call(_ ==> _[0], [[1]]) }}
+{{ call(xcv ==> xcv.foo, [{foo:'bar'}]) }}
+{{ call(Aaa ==> Aaa|first, ['foobar']) }}
 --DATA--
 return [];
 --EXPECT--

@@ -1,11 +1,11 @@
 --TEST--
 "map" filter
 --TEMPLATE--
-{% for i in data|map(=> _.FOO + 1 ) %}
+{% for i in data|map(==> _.FOO + 1 ) %}
  * {{ i }}
 {% endfor %}
 ====
-{% for i in data|select(=> _['BAR'] ) %}
+{% for i in data|select(==> _['BAR'] ) %}
  * {{ i }}
 {% endfor %}
 --DATA--

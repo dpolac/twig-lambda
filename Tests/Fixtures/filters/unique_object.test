@@ -1,7 +1,7 @@
 --TEST--
 "unique_by" filter works with list of objects
 --TEMPLATE--
-{% for i in list|unique_by((i1; i2) => i1 is same as(i2)) %}
+{% for i in list|unique_by((i1; i2) ==> i1 is same as(i2)) %}
  * {{ i.data }}
 {% endfor %}
 --DATA--

@@ -2,9 +2,9 @@
 argument variables are undefined inside of the lambda when it's called without arguments
 --TEMPLATE--
 {% set _ = 'FAIL' %}
-{{ call( => _|default('FOOBAR') ) }}
+{{ call( ==> _|default('FOOBAR') ) }}
 {% set a = 'FAIL' %}
-{{ call((a) => a|default('FOOBAR') ) }}
+{{ call((a) ==> a|default('FOOBAR') ) }}
 --DATA--
 return [];
 --EXPECT--

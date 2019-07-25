@@ -11,70 +11,80 @@
 namespace DPolac\TwigLambda;
 
 use DPolac\Dictionary;
+use DPolac\TwigLambda\NodeExpression\Arguments;
+use DPolac\TwigLambda\NodeExpression\SimpleLambda;
+use DPolac\TwigLambda\NodeExpression\LambdaWithArguments;
+use Twig\Error\RuntimeError;
+use Twig\ExpressionParser;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
+use Twig\TwigTest;
 
-class LambdaExtension extends \Twig_Extension
+class LambdaExtension extends AbstractExtension
 {
-
     public function getOperators()
     {
         return [
             [
-                '=>' => [
+                '==>' => [
                     'precedence' => 0,
-                    'class' => '\DPolac\TwigLambda\NodeExpression\SimpleLambda'
+                    'class' => SimpleLambda::class,
                 ],
             ],
             [
-                '=>' => [
+                '==>' => [
                     'precedence' => 0,
-                    'class' => '\DPolac\TwigLambda\NodeExpression\LambdaWithArguments',
-                    'associativity' => \Twig_ExpressionParser::OPERATOR_LEFT
+                    'class' => LambdaWithArguments::class,
+                    'associativity' => ExpressionParser::OPERATOR_LEFT
                 ],
                 ';' => [
                     'precedence' => 5,
-                    'class' => '\DPolac\TwigLambda\NodeExpression\Arguments',
-                    'associativity' => \Twig_ExpressionParser::OPERATOR_RIGHT
+                    'class' => Arguments::class,
+                    'associativity' => ExpressionParser::OPERATOR_RIGHT
                 ],
             ]
         ];
     }
-    
+
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('call', '\DPolac\TwigLambda\LambdaExtension::call'),
+            new TwigFunction('call', [ LambdaExtension::class, 'call' ]),
         ];
     }
 
     public function getTests()
     {
         return [
-            new \Twig_SimpleTest('every', '\DPolac\TwigLambda\LambdaExtension::every'),
-            new \Twig_SimpleTest('any', '\DPolac\TwigLambda\LambdaExtension::any'),
+            new TwigTest('every', [ LambdaExtension::class, 'every' ]),
+            new TwigTest('any', [ LambdaExtension::class, 'any' ]),
         ];
     }
 
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('map', '\DPolac\TwigLambda\LambdaExtension::map'),
-            new \Twig_SimpleFilter('select', '\DPolac\TwigLambda\LambdaExtension::map'),
+            new TwigFilter('map', [ LambdaExtension::class, 'map' ]),
+            new TwigFilter('select', [ LambdaExtension::class, 'map' ]),
 
-            new \Twig_SimpleFilter('filter', '\DPolac\TwigLambda\LambdaExtension::filter'),
-            new \Twig_SimpleFilter('where', '\DPolac\TwigLambda\LambdaExtension::filter'),
+            new TwigFilter('filter', [ LambdaExtension::class, 'filter' ]),
+            new TwigFilter('where', [ LambdaExtension::class, 'filter' ]),
 
-            new \Twig_SimpleFilter('unique_by', '\DPolac\TwigLambda\LambdaExtension::uniqueBy'),
-            new \Twig_SimpleFilter('group_by', '\DPolac\TwigLambda\LambdaExtension::groupBy'),
-            new \Twig_SimpleFilter('sort_by', '\DPolac\TwigLambda\LambdaExtension::sortBy'),
-            new \Twig_SimpleFilter('count_by', '\DPolac\TwigLambda\LambdaExtension::countBy'),
+            new TwigFilter('unique_by', [ LambdaExtension::class, 'uniqueBy' ]),
+            new TwigFilter('group_by', [ LambdaExtension::class, 'groupBy' ]),
+            new TwigFilter('sort_by', [ LambdaExtension::class, 'sortBy' ]),
+            new TwigFilter('count_by', [ LambdaExtension::class, 'countBy' ]),
         ];
     }
-    
+
+    /**
+     * @throws RuntimeError
+     */
     public static function map($array, $callback) 
     {
         if (!is_callable($callback)) {
-            throw new \Twig_Error_Runtime(sprintf(
-                'Second argument of "map" must be callable, but is "%s".', gettype($callback)));
+            throw new RuntimeError(sprintf('Second argument of "map" must be callable, but is "%s".', gettype($callback)));
         }
         
         if (is_array($array)) {
@@ -86,18 +96,19 @@ class LambdaExtension extends \Twig_Extension
             }
             $array = $result;
         } else {
-            throw new \Twig_Error_Runtime(sprintf(
-                'First argument of "map" must be array or Traversable, but is "%s".', gettype($array)));
+            throw new RuntimeError(sprintf('First argument of "map" must be array or Traversable, but is "%s".', gettype($array)));
         }
         
         return $array;
     }
 
+    /**
+     * @throws RuntimeError
+     */
     public static function filter($array, $callback)
     {
         if (!is_callable($callback)) {
-            throw new \Twig_Error_Runtime(sprintf(
-                'Second argument of "filter" must be callable, but is "%s".', gettype($callback)));
+            throw new RuntimeError(sprintf('Second argument of "filter" must be callable, but is "%s".', gettype($callback)));
         }
 
         if (is_array($array)) {
@@ -111,18 +122,19 @@ class LambdaExtension extends \Twig_Extension
             }
             $array = $result;
         } else {
-            throw new \Twig_Error_Runtime(sprintf(
-                'First argument of "filter" must be array or Traversable, but is "%s".', gettype($array)));
+            throw new RuntimeError(sprintf('First argument of "filter" must be array or Traversable, but is "%s".', gettype($array)));
         }
 
         return $array;
     }
 
+    /**
+     * @throws RuntimeError
+     */
     public static function uniqueBy($array, $callback)
     {
         if (!is_array($array) && !($array instanceof \Traversable)) {
-            throw new \Twig_Error_Runtime(sprintf(
-                'First argument of "unique_by" must be array or Traversable, but is "%s".', gettype($array)));
+            throw new RuntimeError(sprintf('First argument of "unique_by" must be array or Traversable, but is "%s".', gettype($array)));
         }
 
         if ('==' === $callback) {
@@ -130,8 +142,7 @@ class LambdaExtension extends \Twig_Extension
         } else if ('===' === $callback) {
             $callback = function($item1, $item2) { return $item1 === $item2; };
         } else if (!is_callable($callback)) {
-            throw new \Twig_Error_Runtime(sprintf(
-                'Second argument of "unique_by" must be callable, "==" or "===", but is "%s".', gettype($callback)));
+            throw new RuntimeError(sprintf('Second argument of "unique_by" must be callable, "==" or "===", but is "%s".', gettype($callback)));
         }
 
         if ($array instanceof \Traversable) {
@@ -158,17 +169,18 @@ class LambdaExtension extends \Twig_Extension
         return $result;
     }
 
+    /**
+     * @throws RuntimeError
+     */
     public static function groupBy($array, $callback)
     {
 
         if (!is_callable($callback)) {
-            throw new \Twig_Error_Runtime(sprintf(
-                'Second argument of "group_by" must be callable, but is "%s".', gettype($callback)));
+            throw new RuntimeError(sprintf('Second argument of "group_by" must be callable, but is "%s".', gettype($callback)));
         }
 
         if (!is_array($array) && !($array instanceof \Traversable)) {
-            throw new \Twig_Error_Runtime(sprintf(
-                'First argument of "group_by" must be array or Traversable, but is "%s".', gettype($array)));
+            throw new RuntimeError(sprintf('First argument of "group_by" must be array or Traversable, but is "%s".', gettype($array)));
         }
 
         $results = new Dictionary();
@@ -187,16 +199,17 @@ class LambdaExtension extends \Twig_Extension
         return $results;
     }
 
+    /**
+     * @throws RuntimeError
+     */
     public static function sortBy($array, $callback, $direction = 'ASC')
     {
         if (!is_callable($callback)) {
-            throw new \Twig_Error_Runtime(sprintf(
-                'Second argument of "sort_by" must be callable, but is "%s".', gettype($callback)));
+            throw new RuntimeError(sprintf('Second argument of "sort_by" must be callable, but is "%s".', gettype($callback)));
         }
 
         if (!is_array($array) && !($array instanceof \Traversable)) {
-            throw new \Twig_Error_Runtime(sprintf(
-                'First argument of "sort_by" must be array or Traversable, but is "%s".', gettype($array)));
+            throw new RuntimeError(sprintf('First argument of "sort_by" must be array or Traversable, but is "%s".', gettype($array)));
         }
 
         if ($array instanceof \Traversable) {
@@ -214,16 +227,17 @@ class LambdaExtension extends \Twig_Extension
         }
     }
 
+    /**
+     * @throws RuntimeError
+     */
     public static function countBy($array, $callback)
     {
         if (!is_callable($callback)) {
-            throw new \Twig_Error_Runtime(sprintf(
-                'Second argument of "count_by" must be callable, but is "%s".', gettype($callback)));
+            throw new RuntimeError(sprintf('Second argument of "count_by" must be callable, but is "%s".', gettype($callback)));
         }
 
         if (!is_array($array) && !($array instanceof \Traversable)) {
-            throw new \Twig_Error_Runtime(sprintf(
-                'First argument of "count_by" must be array or Traversable, but is "%s".', gettype($array)));
+            throw new RuntimeError(sprintf('First argument of "count_by" must be array or Traversable, but is "%s".', gettype($array)));
         }
 
         $result = new Dictionary();
@@ -242,17 +256,18 @@ class LambdaExtension extends \Twig_Extension
         }
         return $result;
     }
-    
+
+    /**
+     * @throws RuntimeError
+     */
     public static function every($array, $callback)
     {
         if (!is_callable($callback)) {
-            throw new \Twig_Error_Runtime(sprintf(
-                'Second argument of "every" must be callable, but is "%s".', gettype($callback)));
+            throw new RuntimeError(sprintf('Second argument of "every" must be callable, but is "%s".', gettype($callback)));
         }
 
         if (!is_array($array) && !($array instanceof \Traversable)) {
-            throw new \Twig_Error_Runtime(sprintf(
-                'First argument of "every" must be array or Traversable, but is "%s".', gettype($array)));
+            throw new RuntimeError(sprintf('First argument of "every" must be array or Traversable, but is "%s".', gettype($array)));
         }
 
         foreach ($array as $i => $item) {
@@ -263,17 +278,18 @@ class LambdaExtension extends \Twig_Extension
 
         return true;
     }
-    
+
+    /**
+     * @throws RuntimeError
+     */
     public static function any($array, $callback)
     {
         if (!is_callable($callback)) {
-            throw new \Twig_Error_Runtime(sprintf(
-                'Second argument of "any" must be callable, but is "%s".', gettype($callback)));
+            throw new RuntimeError(sprintf('Second argument of "any" must be callable, but is "%s".', gettype($callback)));
         }
 
         if (!is_array($array) && !($array instanceof \Traversable)) {
-            throw new \Twig_Error_Runtime(sprintf(
-                'First argument of "any" must be array or Traversable, but is "%s".', gettype($array)));
+            throw new RuntimeError(sprintf('First argument of "any" must be array or Traversable, but is "%s".', gettype($array)));
         }
 
         foreach ($array as $i => $item) {
@@ -290,6 +306,7 @@ class LambdaExtension extends \Twig_Extension
         if (!is_callable($callback)) {
             throw new \InvalidArgumentException('First argument must be callable.');
         }
+
         return call_user_func_array($callback, $args);
     }
 
