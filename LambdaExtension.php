@@ -19,13 +19,13 @@ class LambdaExtension extends \Twig_Extension
     {
         return [
             [
-                '=>' => [
+                '==>' => [
                     'precedence' => 0,
                     'class' => '\DPolac\TwigLambda\NodeExpression\SimpleLambda'
                 ],
             ],
             [
-                '=>' => [
+                '==>' => [
                     'precedence' => 0,
                     'class' => '\DPolac\TwigLambda\NodeExpression\LambdaWithArguments',
                     'associativity' => \Twig_ExpressionParser::OPERATOR_LEFT
