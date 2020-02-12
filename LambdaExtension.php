@@ -19,17 +19,26 @@ class LambdaExtension extends \Twig_Extension
     {
         return [
             [
-                '=>' => [
-                    'precedence' => 0,
-                    'class' => '\DPolac\TwigLambda\NodeExpression\SimpleLambda'
-                ],
+				'=>' => [
+					'precedence' => 0,
+					'class' => '\DPolac\TwigLambda\NodeExpression\SimpleLambda'
+				],
+				'==>' => [
+					'precedence' => 0,
+					'class' => '\DPolac\TwigLambda\NodeExpression\SimpleLambda'
+				],
             ],
             [
-                '=>' => [
-                    'precedence' => 0,
-                    'class' => '\DPolac\TwigLambda\NodeExpression\LambdaWithArguments',
-                    'associativity' => \Twig_ExpressionParser::OPERATOR_LEFT
-                ],
+				'=>' => [
+					'precedence' => 0,
+					'class' => '\DPolac\TwigLambda\NodeExpression\LambdaWithArguments',
+					'associativity' => \Twig_ExpressionParser::OPERATOR_LEFT
+				],
+				'==>' => [
+					'precedence' => 0,
+					'class' => '\DPolac\TwigLambda\NodeExpression\LambdaWithArguments',
+					'associativity' => \Twig_ExpressionParser::OPERATOR_LEFT
+				],
                 ';' => [
                     'precedence' => 5,
                     'class' => '\DPolac\TwigLambda\NodeExpression\Arguments',
@@ -38,7 +47,7 @@ class LambdaExtension extends \Twig_Extension
             ]
         ];
     }
-    
+
     public function getFunctions()
     {
         return [
@@ -67,16 +76,22 @@ class LambdaExtension extends \Twig_Extension
             new \Twig_SimpleFilter('group_by', '\DPolac\TwigLambda\LambdaExtension::groupBy'),
             new \Twig_SimpleFilter('sort_by', '\DPolac\TwigLambda\LambdaExtension::sortBy'),
             new \Twig_SimpleFilter('count_by', '\DPolac\TwigLambda\LambdaExtension::countBy'),
+
+			new \Twig_SimpleFilter('is_every', '\DPolac\TwigLambda\LambdaExtension::every'),
+			new \Twig_SimpleFilter('is_any', '\DPolac\TwigLambda\LambdaExtension::any'),
         ];
     }
-    
-    public static function map($array, $callback) 
+
+	/**
+	 * @deprecated since v1.1.0 use native twig function
+	 */
+    public static function map($array, $callback)
     {
         if (!is_callable($callback)) {
             throw new \Twig_Error_Runtime(sprintf(
                 'Second argument of "map" must be callable, but is "%s".', gettype($callback)));
         }
-        
+
         if (is_array($array)) {
             $array = array_map($callback, $array, array_keys($array));
         } elseif ($array instanceof \Traversable) {
@@ -89,10 +104,13 @@ class LambdaExtension extends \Twig_Extension
             throw new \Twig_Error_Runtime(sprintf(
                 'First argument of "map" must be array or Traversable, but is "%s".', gettype($array)));
         }
-        
+
         return $array;
     }
 
+	/**
+	 * @deprecated since v1.1.0 use native twig function
+	 */
     public static function filter($array, $callback)
     {
         if (!is_callable($callback)) {
@@ -143,7 +161,7 @@ class LambdaExtension extends \Twig_Extension
         } else {
             $result = [];
         }
-        
+
         foreach ($array as $i => $item) {
             foreach ($array as $j => $previous) {
                 if ($i === $j) {
@@ -187,6 +205,9 @@ class LambdaExtension extends \Twig_Extension
         return $results;
     }
 
+	/**
+	 * @deprecated since v1.1.0 use native twig function
+	 */
     public static function sortBy($array, $callback, $direction = 'ASC')
     {
         if (!is_callable($callback)) {
@@ -242,7 +263,7 @@ class LambdaExtension extends \Twig_Extension
         }
         return $result;
     }
-    
+
     public static function every($array, $callback)
     {
         if (!is_callable($callback)) {
@@ -263,7 +284,7 @@ class LambdaExtension extends \Twig_Extension
 
         return true;
     }
-    
+
     public static function any($array, $callback)
     {
         if (!is_callable($callback)) {

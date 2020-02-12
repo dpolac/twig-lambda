@@ -1,5 +1,5 @@
 {
-    "name": "dpolac/twig-lambda",
+    "name": "leonaero/twig-lambda",
     "type": "library",
     "description": "Lambda expressions for Twig and filters that make use of them",
     "keywords": [
@@ -14,12 +14,6 @@
     ],
     "minimum-stability": "dev",
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Damian Polac",
-            "email": "damian.polac.111@gmail.com"
-        }
-    ],
     "require": {
         "php": "^5.6 || ^7.0",
         "twig/twig": "^1.0 || ^2.0",
