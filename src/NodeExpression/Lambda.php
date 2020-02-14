@@ -8,9 +8,11 @@
  * file that was distributed with this source code.
  */
 
-namespace DPolac\TwigLambda\NodeExpression;
+namespace LeonAero\TwigLambda\NodeExpression;
 
-
+/**
+ * @deprecated since v1.1.0
+ */
 abstract class Lambda extends \Twig_Node_Expression
 {
     protected function compileWithArguments(

@@ -8,9 +8,11 @@
  * file that was distributed with this source code.
  */
 
-namespace DPolac\TwigLambda\NodeExpression;
+namespace LeonAero\TwigLambda\NodeExpression;
 
-
+/**
+ * @deprecated since v1.1.0
+ */
 class LambdaWithArguments extends Lambda
 {
     private $arguments = [];
@@ -26,7 +28,7 @@ class LambdaWithArguments extends Lambda
         } else {
             throw new \InvalidArgumentException('Invalid argument\'s list for lambda.');
         }
-        
+
         if (count($this->arguments) !== count(array_flip($this->arguments))) {
             throw new \InvalidArgumentException('Each lambda argument must have unique name.');
         }

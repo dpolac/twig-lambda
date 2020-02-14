@@ -8,9 +8,11 @@
  * file that was distributed with this source code.
  */
 
-namespace DPolac\TwigLambda\NodeExpression;
+namespace LeonAero\TwigLambda\NodeExpression;
 
-
+/**
+ * @deprecated since v1.1.0
+ */
 class SimpleLambda extends Lambda
 {
     public function __construct(\Twig_Node $node, $lineno)

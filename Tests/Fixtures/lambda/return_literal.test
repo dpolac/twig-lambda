@@ -1,9 +1,9 @@
 --TEST--
 lambda expression works when returning literal
 --TEMPLATE--
-{{ call(=> 'WORKS') }}
-{{ call((a; b; c) => 'WORKS') }}
-{{ call(foo => 'WORKS') }}
+{{ call(v ==> 'WORKS') }}
+{{ call((a; b; c) ==> 'WORKS') }}
+{{ call(foo ==> 'WORKS') }}
 --DATA--
 return [];
 --EXPECT--

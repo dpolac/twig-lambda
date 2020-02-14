@@ -1,7 +1,7 @@
 --TEST--
-"groupBy" filter
+"group_by" filter
 --TEMPLATE--
-{% for key,items in data|group_by(=> _|first ) %}
+{% for key,items in data|group_by(v ==> v|first ) %}
  = {{ key }}
 {% for i in items %}
    * {{ i }}

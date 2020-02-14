@@ -1,7 +1,7 @@
 --TEST--
-"countBy" filter
+"count_by" filter
 --TEMPLATE--
-{% for key, value in data|count_by(=> _.foo ) %}
+{% for key, value in data|count_by(v ==> v.foo ) %}
 {{ key }}: {{ value }}
 {% endfor %}
 --DATA--

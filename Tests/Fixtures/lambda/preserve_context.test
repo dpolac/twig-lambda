@@ -1,8 +1,8 @@
 --TEST--
 lambda doesn't override _ and __ variables from outside
 --TEMPLATE--
-{% do call(=> _, ['FAIL']) -%}
-{% do call((a;foo) => a~foo, ['FAIL', 'FAIL']) -%}
+{% do call(v ==> v, ['FAIL']) -%}
+{% do call((a;foo) ==> a~foo, ['FAIL', 'FAIL']) -%}
 {{ _ }}
 {{ __ }}
 {{ a }}

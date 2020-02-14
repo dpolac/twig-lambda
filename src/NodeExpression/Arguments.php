@@ -8,12 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace DPolac\TwigLambda\NodeExpression;
+namespace LeonAero\TwigLambda\NodeExpression;
 
+/**
+ * @deprecated since v1.1.0
+ */
 class Arguments extends \Twig_Node_Expression
 {
     private $arguments;
-    
+
     public function __construct(\Twig_Node $left, \Twig_Node $right, $lineno)
     {
         $arguments = [];
@@ -26,9 +29,9 @@ class Arguments extends \Twig_Node_Expression
                 throw new \InvalidArgumentException('Invalid argument.');
             }
         }
-        
+
         $this->arguments = array_merge($arguments[0], $arguments[1]);
-        
+
         parent::__construct(array('left' => $left, 'right' => $right), array(), $lineno);
     }
 
@@ -36,8 +39,8 @@ class Arguments extends \Twig_Node_Expression
     {
         throw new \Exception('Semicolon-separated list of arguments can be only used in lambda expression.');
     }
-    
-    public function getArguments() 
+
+    public function getArguments()
     {
         return $this->arguments;
     }
