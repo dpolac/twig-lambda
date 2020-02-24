@@ -5,7 +5,7 @@
 
 | Version | Twig Version | Php Version | 
 |---- |----|----|
-| 2.0 | ^2.10 | ^7.0 |
+| ^2.0 | ^2.10 | ^7.0 |
 | ^1.0 | ^1.0 &#124;&#124; 2.9.* | ^5.6 &#124;&#124; ^7.0 |
 
 <a name="examples"></a>
@@ -56,7 +56,7 @@ services:
 
 <a name="lambda"></a>
 ### ~~Lambda expression~~
-##### deprecated since 1.1.0 and will be remove in 2.0.0 use original twig lambda
+##### deprecated since 1.1.0 and will be remove in 3.0.0 use original twig lambda
 To create lambda expression prepend any valid Twig expression
 with `==>` operator.
 Inside of the lambda expression you can use
@@ -190,7 +190,6 @@ Returns true if lambda returns true for any element from an array.
 <a name="is_every"></a>
 ### |is_every
 **Signature:** `array|is_every(lambda)`
-##### deprecated since 1.1.0 and will be replaced in 2.0.0 by is_every function
 
 Returns true if lambda returns true for every element from an array.
 
@@ -204,7 +203,8 @@ Returns true if lambda returns true for every element from an array.
 ----------------------------------------------------------------
 
 <a name="call"></a>
-### call()
+### ~~call()~~
+##### deprecated since 2.0.0
 **Signature:** `call(lambda [, arguments:array])`
 
 Calls lambda and returns its result. You can provide array

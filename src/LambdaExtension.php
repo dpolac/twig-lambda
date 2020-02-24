@@ -205,6 +205,9 @@ class LambdaExtension extends AbstractExtension
         return false;
     }
 
+	/**
+	 * @deprecated since v2.0
+	 */
     public function call($callback, array $args = [])
     {
         if (!is_callable($callback)) {
