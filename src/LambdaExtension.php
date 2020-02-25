@@ -1,58 +1,14 @@
 <?php
-/**
- * This file is part of TwigLambda
- *
- * (c) Damian Polac <damian.polac.111@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
 namespace LeonAero\TwigLambda;
 
 use DPolac\Dictionary;
-use LeonAero\TwigLambda\NodeExpression\Arguments;
-use LeonAero\TwigLambda\NodeExpression\LambdaWithArguments;
-use LeonAero\TwigLambda\NodeExpression\SimpleLambda;
 use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
-use Twig\TwigFunction;
 
 class LambdaExtension extends AbstractExtension
 {
-
-    public function getOperators()
-    {
-        return [
-            [
-				'==>' => [
-					'precedence' => 0,
-					'class' => SimpleLambda::class
-				],
-            ],
-            [
-				'==>' => [
-					'precedence' => 0,
-					'class' => LambdaWithArguments::class,
-					'associativity' => \Twig_ExpressionParser::OPERATOR_LEFT
-				],
-                ';' => [
-                    'precedence' => 5,
-                    'class' => Arguments::class,
-                    'associativity' => \Twig_ExpressionParser::OPERATOR_RIGHT
-                ],
-            ]
-        ];
-    }
-
-    public function getFunctions()
-    {
-        return [
-            new TwigFunction('call', [$this, 'call']),
-        ];
-    }
-
     public function getFilters()
     {
         return [
@@ -65,20 +21,20 @@ class LambdaExtension extends AbstractExtension
         ];
     }
 
-    public function unique_by($array, $callback)
+    public function unique_by($array, $arrow)
     {
         if (!is_array($array) && !($array instanceof \Traversable)) {
             throw new RuntimeError(sprintf(
                 'First argument of "unique_by" must be array or Traversable, but is "%s".', gettype($array)));
         }
 
-        if ('==' === $callback) {
-            $callback = static function($item1, $item2) { return $item1 == $item2; };
-        } else if ('===' === $callback) {
-            $callback = static function($item1, $item2) { return $item1 === $item2; };
-        } else if (!is_callable($callback)) {
+        if ('==' === $arrow) {
+            $arrow = static function($item1, $item2) { return $item1 == $item2; };
+        } else if ('===' === $arrow) {
+            $arrow = static function($item1, $item2) { return $item1 === $item2; };
+        } else if (!is_callable($arrow)) {
             throw new RuntimeError(sprintf(
-                'Second argument of "unique_by" must be callable, "==" or "===", but is "%s".', gettype($callback)));
+            	'Second argument of "unique_by" must be callable, "==" or "===", but is "%s".', gettype($arrow)));
         }
 
         if ($array instanceof \Traversable) {
@@ -96,7 +52,7 @@ class LambdaExtension extends AbstractExtension
                 if ($i === $j) {
                     // add to results if already checked every previous element
                     $result[$i] = $item;
-                } elseif (isset($result[$j]) && $callback($item, $previous, $i, $j)) {
+                } elseif (isset($result[$j]) && $arrow($item, $previous, $i, $j)) {
                     // skip if is identical with value which is already in results array
                     continue 2;
                 }
@@ -105,12 +61,11 @@ class LambdaExtension extends AbstractExtension
         return $result;
     }
 
-    public function group_by($array, $callback)
+    public function group_by($array, $arrow)
     {
-
-        if (!is_callable($callback)) {
+        if (!is_callable($arrow)) {
             throw new RuntimeError(sprintf(
-                'Second argument of "group_by" must be callable, but is "%s".', gettype($callback)));
+                'Second argument of "group_by" must be callable, but is "%s".', gettype($arrow)));
         }
 
         if (!is_array($array) && !($array instanceof \Traversable)) {
@@ -121,7 +76,7 @@ class LambdaExtension extends AbstractExtension
         $results = new Dictionary();
 
         foreach ($array as $i => $item) {
-            $key = $callback($item, $i);
+            $key = $arrow($item, $i);
 
             if (!isset($results[$key])) {
                 $results[$key] = [$i => $item];
@@ -134,11 +89,11 @@ class LambdaExtension extends AbstractExtension
         return $results;
     }
 
-    public function count_by($array, $callback)
+    public function count_by($array, $arrow)
     {
-        if (!is_callable($callback)) {
+        if (!is_callable($arrow)) {
             throw new RuntimeError(sprintf(
-                'Second argument of "count_by" must be callable, but is "%s".', gettype($callback)));
+                'Second argument of "count_by" must be callable, but is "%s".', gettype($arrow)));
         }
 
         if (!is_array($array) && !($array instanceof \Traversable)) {
@@ -148,7 +103,7 @@ class LambdaExtension extends AbstractExtension
 
         $result = [];
         foreach ($array as $i => $element) {
-            $key = $callback($element, $i);
+            $key = $arrow($element, $i);
             if (is_bool($key)) {
                 $key = $key ? 'true' : 'false';
             } elseif ($key === null) {
@@ -163,11 +118,11 @@ class LambdaExtension extends AbstractExtension
         return $result;
     }
 
-    public function is_every($array, $callback): bool
+    public function is_every($array, $arrow): bool
 	{
-        if (!is_callable($callback)) {
+        if (!is_callable($arrow)) {
             throw new RuntimeError(sprintf(
-                'Second argument of "every" must be callable, but is "%s".', gettype($callback)));
+                'Second argument of "every" must be callable, but is "%s".', gettype($arrow)));
         }
 
         if (!is_array($array) && !($array instanceof \Traversable)) {
@@ -176,7 +131,7 @@ class LambdaExtension extends AbstractExtension
         }
 
         foreach ($array as $i => $item) {
-            if (!$callback($item, $i)) {
+            if (!$arrow($item, $i)) {
                 return false;
             }
         }
@@ -184,11 +139,11 @@ class LambdaExtension extends AbstractExtension
         return true;
     }
 
-    public function is_any($array, $callback): bool
+    public function is_any($array, $arrow): bool
 	{
-        if (!is_callable($callback)) {
+        if (!is_callable($arrow)) {
             throw new RuntimeError(sprintf(
-                'Second argument of "any" must be callable, but is "%s".', gettype($callback)));
+                'Second argument of "any" must be callable, but is "%s".', gettype($arrow)));
         }
 
         if (!is_array($array) && !($array instanceof \Traversable)) {
@@ -197,23 +152,12 @@ class LambdaExtension extends AbstractExtension
         }
 
         foreach ($array as $i => $item) {
-            if ($callback($item, $i)) {
+            if ($arrow($item, $i)) {
                 return true;
             }
         }
 
         return false;
-    }
-
-	/**
-	 * @deprecated since v2.0
-	 */
-    public function call($callback, array $args = [])
-    {
-        if (!is_callable($callback)) {
-            throw new \InvalidArgumentException('First argument must be callable.');
-        }
-        return call_user_func_array($callback, $args);
     }
 
     public function getName()

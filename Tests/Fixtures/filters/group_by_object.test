@@ -1,7 +1,7 @@
 --TEST--
 "group_by" filter can group by object
 --TEMPLATE--
-{% for category, articles in array|group_by(v ==> v.category) %}
+{% for category, articles in array|group_by(v => v.category) %}
   = {{ category.name }}
 {% for article in articles %}
     * {{ article.name }}

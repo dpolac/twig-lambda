@@ -1,10 +1,10 @@
 --TEST--
 "all" test
 --TEMPLATE--
-{{ data|is_every(v ==> v > 6) ? 'YES':'NO' }}
-{{ data|is_every(v ==> v is even) ? 'YES':'NO' }}
-{{ data|is_every(v ==> v < 12) ? 'YES':'NO' }}
-{{ data|is_every((v; i) ==> i >= 0) ? 'YES':'NO' }}
+{{ data|is_every(v => v > 6) ? 'YES':'NO' }}
+{{ data|is_every(v => v is even) ? 'YES':'NO' }}
+{{ data|is_every(v => v < 12) ? 'YES':'NO' }}
+{{ data|is_every((v, i) => i >= 0) ? 'YES':'NO' }}
 --DATA--
 return [ 'data' => [] ];
 --EXPECT--

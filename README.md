@@ -1,10 +1,10 @@
 # Twig Lambda
-> Lambda expressions for Twig and filters that make use of them
 
 ----------------------------------------------------------------
 
 | Version | Twig Version | Php Version | 
 |---- |----|----|
+| ^3.0 | ^2.10 | ^7.2 |
 | ^2.0 | ^2.10 | ^7.0 |
 | ^1.0 | ^1.0 &#124;&#124; 2.9.* | ^5.6 &#124;&#124; ^7.0 |
 
@@ -53,46 +53,7 @@ services:
 ----------------------------------------------------------------
 
 ## Usage
-
-<a name="lambda"></a>
-### ~~Lambda expression~~
-##### deprecated since 1.1.0 and will be remove in 3.0.0 use original twig lambda
-To create lambda expression prepend any valid Twig expression
-with `==>` operator.
-Inside of the lambda expression you can use
-any variable from the outside. There are also two special
-variables available:
-  * `_` (single underscore) - first argument,
-  * `__` (double underscore) - array of arguments counted
-    from zero.
-
-```
-==> _.name
-==> _ * 2
-==> _|first
-==> 'foobar'
-==> _ is even
-==> __[0] + __[1]
-```
-
-To create lambda expression with list of arguments, add it
-before `==>` operator. Separate multiple arguments with
-semicolons. You can use brackets for readability.
-
-```
-x ==> x + 1
-(book) ==> book.author
-arg1; arg2 ==> arg1 ~ arg2
-(a; b; c) ==> a + b - c
-```
-
-Note that if you use list of arguments, `_` variable is not
-longer available.
-
-----------------------------------------------------------------
-
-Below is a list of available filters and tests. All works
-with arrays and any Traversable object and preserve it keys.
+Below is a list of available filters. All works with arrays and any Traversable object and preserve it keys.
 
 ----------------------------------------------------------------
 
@@ -198,24 +159,4 @@ Returns true if lambda returns true for every element from an array.
 ```twig
 {{ [1, 2, 3]|is_every(v => v > 0) ? "All elements in the array are positive." }}
 {# prints 'All elements in the array are positive.' #}
-```
-
-----------------------------------------------------------------
-
-<a name="call"></a>
-### ~~call()~~
-##### deprecated since 2.0.0
-**Signature:** `call(lambda [, arguments:array])`
-
-Calls lambda and returns its result. You can provide array
-of arguments.
-
-This function is provided to allow creating twig macros taking
-lambda as an argument.
-
-```twig
-{{ call(v => v * 2, [10]) }}
-{# prints '20' #}
-{{ call(v => v.foo, [{foo: 12}]) }}
-{# prints '12' #}
 ```

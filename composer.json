@@ -12,12 +12,12 @@
     "minimum-stability": "dev",
     "license": "MIT",
     "require": {
-        "php": "^7.0",
+        "php": "^7.2.5",
         "twig/twig": "^2.10",
         "dpolac/dictionary": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.5"
+        "phpunit/phpunit": "^8.5"
     },
     "autoload": {
         "psr-4": {
